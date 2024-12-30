@@ -2,7 +2,7 @@ import { Droppable } from 'react-beautiful-dnd'
 import TaskColumn from './TaskColumn'
 import './TaskBoard.css'
 
-function TaskBoard({ tasks, onToggleComplete }) {
+function TaskBoard({ tasks, onToggleComplete, onUpdateTask, onDeleteTask }) {
   const columns = ['Todo', 'Now', 'Next', 'Later', 'Done']
 
   return (
@@ -20,6 +20,8 @@ function TaskBoard({ tasks, onToggleComplete }) {
                   title={column}
                   tasks={tasks.filter(task => task.column === column)}
                   onToggleComplete={onToggleComplete}
+                  onUpdateTask={onUpdateTask}
+                  onDeleteTask={onDeleteTask}
                 />
                 {provided.placeholder}
               </div>

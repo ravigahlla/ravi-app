@@ -1,0 +1,175 @@
+/* Add your styles here */
+.sidebar {
+  /* your styles */
+} 
+
+.project-sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  background: #f8f9fa;
+  border-right: 1px solid #dee2e6;
+  transition: all 0.3s ease;
+  overflow: hidden;
+  z-index: 1000;
+  height: 100vh;
+  white-space: nowrap;
+  display: flex;
+  flex-direction: column;
+}
+
+.project-sidebar.expanded {
+  width: 250px;
+}
+
+.project-sidebar.collapsed {
+  width: 50px;
+}
+
+.sidebar-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 8px;
+  border-bottom: 1px solid #dee2e6;
+  position: relative;
+  min-height: 80px;
+}
+
+.sidebar-title {
+  margin: 0;
+  font-size: 1.2em;
+  transition: opacity 0.2s ease;
+}
+
+.project-sidebar.collapsed .sidebar-title {
+  opacity: 0;
+}
+
+.toggle-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 4px;
+  min-width: 30px;
+  z-index: 2;
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.toggle-button:hover {
+  background: #e9ecef;
+}
+
+.sidebar-content {
+  opacity: 1;
+  transition: opacity 0.2s ease;
+  overflow: hidden;
+}
+
+.project-sidebar.collapsed .sidebar-content {
+  opacity: 0;
+}
+
+.new-project-form {
+  padding: 16px;
+  display: flex;
+  gap: 8px;
+}
+
+.new-project-form input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  min-width: 0;
+}
+
+.new-project-form button {
+  padding: 8px 16px;
+  background: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.projects-list {
+  padding: 8px;
+}
+
+.project-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 16px;
+  margin: 4px 0;
+  border-radius: 4px;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.project-item:hover {
+  background: #e9ecef;
+}
+
+.project-item.selected {
+  background: #007bff;
+  color: white;
+}
+
+.project-name {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-count {
+  background: rgba(0, 0, 0, 0.1);
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-size: 0.8em;
+  margin-left: 8px;
+}
+
+.project-item.selected .task-count {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.collapsed-title {
+  position: absolute;
+  left: 50%;
+  top: 40%;
+  transform: translate(-50%, -50%) rotate(-90deg);
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  font-weight: bold;
+  color: #666;
+  letter-spacing: 1px;
+  pointer-events: none;
+}
+
+.project-sidebar.collapsed .collapsed-title {
+  opacity: 1;
+}
+
+.project-sidebar.expanded .sidebar-header {
+  flex-direction: row;
+  justify-content: space-between;
+  min-height: 50px;
+}
+
+.project-sidebar.expanded .toggle-button {
+  position: absolute;
+  right: 8px;
+  top: 50%;
+  bottom: auto;
+  left: auto;
+  transform: translateY(-50%);
+} 

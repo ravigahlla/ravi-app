@@ -47,6 +47,25 @@
   padding: 20px;
 }
 
+.app-container {
+  display: flex;
+  min-height: 100vh;
+  width: 100%;
+}
+
+.main-content {
+  flex: 1;
+  margin-left: 50px; /* Width of collapsed sidebar */
+  padding: 20px;
+  transition: margin-left 0.3s ease;
+  width: calc(100% - 50px);
+}
+
+.main-content.sidebar-expanded {
+  margin-left: 250px; /* Width of expanded sidebar */
+  width: calc(100% - 250px);
+}
+
 h1 {
   text-align: center;
   color: #333;
