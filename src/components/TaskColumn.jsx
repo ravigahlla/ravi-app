@@ -1,3 +1,4 @@
+import { Draggable } from 'react-beautiful-dnd'
 import './TaskColumn.css'
 
 function TaskColumn({ title, tasks, onToggleComplete }) {
@@ -5,15 +6,29 @@ function TaskColumn({ title, tasks, onToggleComplete }) {
     <div className="task-column">
       <h2>{title}</h2>
       <div className="tasks">
-        {tasks.map(task => (
-          <div key={task.id} className="task-card">
-            <input
-              type="checkbox"
-              checked={task.isComplete}
-              onChange={() => onToggleComplete(task.id)}
-            />
-            <span>{task.name}</span>
-          </div>
+        {tasks.map((task, index) => (
+          <Draggable
+            key={task.id}
+            draggableId={task.id}
+            index={index}
+          >
+            {(provided, snapshot) => (
+              <div
+                ref={provided.innerRef}
+                {...provided.draggableProps}
+                {...provided.dragHandleProps}
+                className={`task-card ${snapshot.isDragging ? 'dragging' : ''}`}
+              >
+                <input
+                  type="checkbox"
+                  checked={task.isComplete}
+                  onChange={() => onToggleComplete(task.id)}
+                  onClick={e => e.stopPropagation()}
+                />
+                <span>{task.name}</span>
+              </div>
+            )}
+          </Draggable>
         ))}
       </div>
     </div>
