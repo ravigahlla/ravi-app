@@ -1,0 +1,6 @@
+.task-board {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 20px 0;
+} 
