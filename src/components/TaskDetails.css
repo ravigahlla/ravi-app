@@ -173,4 +173,27 @@ textarea::placeholder {
   border-radius: 12px;
   color: white;
   white-space: nowrap;
+}
+
+.task-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.task-title-row h2.completed {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+.task-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.modal-header-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 } 

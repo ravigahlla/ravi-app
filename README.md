@@ -144,5 +144,33 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Auto-saving for project notes
 - Improved project-task association UI
 
+## Testing
+The application uses Jest and React Testing Library for testing. Test files are located in `__tests__` directories next to the components they test.
+
+### Test Structure
+- Unit tests for individual components
+- Integration tests for component interactions
+- Mocked external dependencies (react-beautiful-dnd, react-hot-toast)
+- Accessibility testing with ARIA roles
+
+### Key Test Files
+- `App.test.jsx` - Main application tests
+- `TaskBoard.test.jsx` - Task board functionality
+- `TaskDetails.test.jsx` - Task modal and form tests
+- `ProjectSidebar.test.jsx` - Project management tests
+
+### Testing Libraries
+- Jest
+- React Testing Library
+- @testing-library/jest-dom
+- @testing-library/user-event
+
+## Accessibility
+The application follows accessibility best practices:
+- ARIA roles and attributes for interactive elements
+- Semantic HTML structure
+- Keyboard navigation support
+- Screen reader friendly modals and dialogs
+
 ---
 Built with ❤️ using React and Vite

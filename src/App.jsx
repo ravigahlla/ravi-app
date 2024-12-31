@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
+import { Toaster, toast } from 'react-hot-toast'
 import './App.css'
 import TaskBoard from './components/TaskBoard'
 import AddTaskForm from './components/AddTaskForm'
@@ -34,16 +35,29 @@ function App() {
   const toggleComplete = (taskId) => {
     setTasks(tasks.map(task => {
       if (task.id === taskId) {
+        const isCompleting = !task.isComplete;
+        
+        // Show completion toast
+        if (isCompleting) {
+          toast.success('Task completed: ' + task.name, {
+            icon: '✨',
+            style: {
+              background: '#28a745',
+              color: '#fff'
+            }
+          });
+        }
+        
         return {
           ...task,
-          isComplete: !task.isComplete,
+          isComplete: isCompleting,
           previousColumn: task.column,
-          column: !task.isComplete ? 'Done' : task.previousColumn
-        }
+          column: isCompleting ? 'Done' : task.previousColumn
+        };
       }
-      return task
-    }))
-  }
+      return task;
+    }));
+  };
 
   const handleDragEnd = (result) => {
     const { destination, source, draggableId } = result
@@ -179,15 +193,28 @@ function App() {
   }
 
   const handleDeleteTask = (taskId) => {
-    // Remove task from all projects first
+    // First, get the task details before deletion
+    const taskToDelete = tasks.find(t => t.id === taskId);
+    if (!taskToDelete) return;
+
+    // Remove task from all projects
     const updatedProjects = projects.map(project => ({
       ...project,
       taskIds: project.taskIds.filter(id => id !== taskId)
     }));
     setProjects(updatedProjects);
 
-    // Then remove the task itself
+    // Remove the task
     setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+
+    // Show deletion toast after task is deleted
+    toast('Task removed: ' + taskToDelete.name, {
+      icon: '🗑️',
+      style: {
+        background: '#6c757d',
+        color: '#fff'
+      }
+    });
   };
 
   useEffect(() => {
@@ -196,6 +223,18 @@ function App() {
 
   return (
     <div className="app-container">
+      <Toaster 
+        position="bottom-right"
+        toastOptions={{
+          duration: 3000,
+          style: {
+            padding: '12px 16px',
+            borderRadius: '6px',
+            fontSize: '14px',
+            fontWeight: '500'
+          }
+        }}
+      />
       <ProjectSidebar
         projects={projects}
         onCreateProject={createProject}

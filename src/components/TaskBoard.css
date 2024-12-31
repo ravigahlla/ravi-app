@@ -8,8 +8,8 @@
 
 .column-container {
   flex: 1;
-  min-width: 280px;
-  max-width: 280px;
+  min-width: 250px;
+  margin: 0 8px;
 }
 
 .droppable-column {
@@ -22,4 +22,15 @@
 .dragging-over {
   background-color: rgba(0, 123, 255, 0.1);
   border-radius: 8px;
+}
+
+.tasks {
+  min-height: 100px;
+  padding: 8px;
+  transition: background-color 0.2s ease;
+}
+
+.tasks.dragging-over {
+  background-color: rgba(0, 0, 0, 0.05);
+  border-radius: 4px;
 } 

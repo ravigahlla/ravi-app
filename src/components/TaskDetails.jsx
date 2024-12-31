@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from 'react'
 import './TaskDetails.css'
 
-function TaskDetails({ task, projects, onClose, onUpdate, onDelete }) {
+function TaskDetails({ task, projects, onClose, onUpdate, onDelete, onToggleComplete }) {
   const [notes, setNotes] = useState(task.notes || '')
   const [newSubTask, setNewSubTask] = useState('')
   const [subTasks, setSubTasks] = useState(task.subTasks || [])
@@ -57,17 +57,35 @@ function TaskDetails({ task, projects, onClose, onUpdate, onDelete }) {
 
   const handleDelete = () => {
     if (window.confirm('Are you sure you want to delete this task?')) {
-      onDelete(task.id)
-      onClose()
+      onDelete(task.id);
+      onClose();
     }
-  }
+  };
 
   return (
     <div className="task-details-overlay">
-      <div ref={modalRef} className="task-details-modal">
+      <div 
+        className="task-details-modal"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="task-title"
+      >
         <div className="modal-header">
           <div className="modal-header-content">
-            <h2>{task.name}</h2>
+            <div className="task-title-row">
+              <input
+                type="checkbox"
+                className="task-checkbox"
+                checked={task.isComplete}
+                onChange={() => onToggleComplete(task.id)}
+              />
+              <h2 
+                id="task-title"
+                className={task.isComplete ? 'completed' : ''}
+              >
+                {task.name}
+              </h2>
+            </div>
             <div className="project-tags">
               {task.projectIds?.map(projectId => {
                 const project = projects.find(p => p.id === projectId)
@@ -84,7 +102,12 @@ function TaskDetails({ task, projects, onClose, onUpdate, onDelete }) {
               })}
             </div>
           </div>
-          <button className="delete-button" onClick={onDelete}>🗑</button>
+          <button 
+            className="delete-button" 
+            onClick={handleDelete}
+          >
+            🗑
+          </button>
         </div>
 
         <div className="details-section">
