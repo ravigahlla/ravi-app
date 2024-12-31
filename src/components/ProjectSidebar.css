@@ -8,8 +8,8 @@
   left: 0;
   top: 0;
   bottom: 0;
-  background: #2a2a2a;
-  border-right: 1px solid #404040;
+  background: #ffffff;
+  border-right: 1px solid #dee2e6;
   transition: all 0.3s ease;
   overflow: hidden;
   z-index: 1000;
@@ -17,7 +17,7 @@
   white-space: nowrap;
   display: flex;
   flex-direction: column;
-  color: #ffffff;
+  color: #212529;
 }
 
 .project-sidebar.expanded {
@@ -33,16 +33,16 @@
   flex-direction: column;
   align-items: center;
   padding: 16px 8px;
-  border-bottom: 1px solid #404040;
+  border-bottom: 1px solid #dee2e6;
   position: relative;
-  min-height: 80px;
+  min-height: 50px;
 }
 
 .sidebar-title {
   margin: 0;
   font-size: 1.2em;
   transition: opacity 0.2s ease;
-  color: #ffffff;
+  color: #212529;
 }
 
 .project-sidebar.collapsed .sidebar-title {
@@ -58,14 +58,15 @@
   min-width: 30px;
   z-index: 2;
   position: absolute;
-  bottom: 8px;
-  left: 50%;
-  transform: translateX(-50%);
-  color: #ffffff;
+  top: 50%;
+  right: 8px;
+  transform: translateY(-50%);
+  color: #212529;
+  font-size: 12px;
 }
 
 .toggle-button:hover {
-  background: #404040;
+  background: #f0f0f0;
 }
 
 .sidebar-content {
@@ -76,6 +77,7 @@
 
 .project-sidebar.collapsed .sidebar-content {
   opacity: 0;
+  pointer-events: none;
 }
 
 .new-project-form {
@@ -87,11 +89,11 @@
 .new-project-form input {
   flex: 1;
   padding: 8px;
-  border: 1px solid #404040;
+  border: 1px solid #dee2e6;
   border-radius: 4px;
   min-width: 0;
-  background: #333333;
-  color: #ffffff;
+  background: #ffffff;
+  color: #212529;
 }
 
 .new-project-form input::placeholder {
@@ -100,12 +102,17 @@
 
 .new-project-form button {
   padding: 8px 16px;
-  background: #007bff;
+  background: #0056b3;
   color: white;
   border: none;
   border-radius: 4px;
   cursor: pointer;
   white-space: nowrap;
+  font-weight: 500;
+}
+
+.new-project-form button:hover {
+  background: #004494;
 }
 
 .projects-list {
@@ -116,9 +123,20 @@
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 8px;
+  padding: 12px;
   cursor: pointer;
-  border-radius: 4px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid #dee2e6;
+  margin-bottom: 4px;
+  transition: all 0.2s ease;
+}
+
+.project-item:hover {
+  background: #f8f9fa;
+  border-color: #ced4da;
+  transform: translateY(-1px);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
 .project-color-indicator {
@@ -136,38 +154,58 @@
 }
 
 .task-count {
-  background: rgba(255, 255, 255, 0.1);
-  padding: 2px 6px;
-  border-radius: 10px;
+  background: #f8f9fa;
+  color: #6c757d;
+  padding: 2px 8px;
+  border-radius: 12px;
   font-size: 0.8em;
   margin-left: 8px;
+  border: 1px solid #dee2e6;
 }
 
 .project-item.selected {
-  background: #0056b3;
-  color: white;
+  background: #e7f1ff;
+  border-color: #0056b3;
+  color: #0056b3;
 }
 
 .project-item.selected .task-count {
-  background: rgba(255, 255, 255, 0.2);
+  background: #0056b3;
+  color: white;
+  border-color: transparent;
 }
 
 .collapsed-title {
-  position: absolute;
-  left: 50%;
-  top: 40%;
-  transform: translate(-50%, -50%) rotate(-90deg);
-  white-space: nowrap;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-  font-weight: bold;
-  color: #ffffff;
-  letter-spacing: 1px;
-  pointer-events: none;
+  display: none;
 }
 
 .project-sidebar.collapsed .collapsed-title {
-  opacity: 1;
+  display: block;
+  position: absolute;
+  left: 50%;
+  top: 50px;
+  transform: translate(-50%, 0) rotate(-90deg);
+  white-space: nowrap;
+  font-weight: 500;
+  color: #212529;
+  letter-spacing: 1px;
+  font-size: 14px;
+  width: max-content;
+}
+
+.project-sidebar.collapsed .toggle-button {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  top: 100px;
+  right: auto;
+}
+
+.project-sidebar.collapsed .sidebar-header {
+  min-height: 140px;
+  position: relative;
+  border-bottom: 1px solid #dee2e6;
+  padding: 16px 8px;
 }
 
 .project-sidebar.expanded .sidebar-header {
@@ -183,4 +221,74 @@
   bottom: auto;
   left: auto;
   transform: translateY(-50%);
+}
+
+.project-header button {
+  padding: 8px 16px;
+  background: #f8f9fa;
+  color: #212529;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.new-project-form input {
+  background: #ffffff;
+  color: #212529;
+  border: 1px solid #dee2e6;
+}
+
+/* ... update other color values similarly ... */
+
+/* Add styles for the bottom cancel button */
+.project-actions {
+  margin-top: auto;
+  padding: 24px 0 0 0;
+  display: flex;
+  justify-content: center;
+}
+
+.cancel-button {
+  padding: 12px 24px;
+  background: #f8f9fa;
+  color: #212529;
+  border: 1px solid #dee2e6;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+  transition: all 0.2s ease;
+}
+
+.cancel-button:hover {
+  background: #e9ecef;
+  border-color: #ced4da;
+}
+
+/* Add these new styles */
+.add-project-button {
+  background: #0056b3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  margin: 8px auto;
+  transition: all 0.2s ease;
+  width: 36px;  /* Fixed width for collapsed state */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.add-project-button:hover {
+  background: #004494;
+}
+
+/* Remove the scale transform on hover */
+.project-sidebar.collapsed .add-project-button {
+  margin: 8px auto;
 } 

@@ -1,12 +1,71 @@
-.task-project-indicators {
-  display: flex;
-  gap: 4px;
-  margin-top: 4px;
+.task-card {
+  background: #ffffff;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 12px;
+  margin-bottom: 8px;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
-.project-indicator {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  opacity: 0.8;
+.task-card:hover {
+  background: #f8f9fa;
+}
+
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.task-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.task-project-labels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.project-label {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 500;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.task-card.dragging {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.completed {
+  text-decoration: line-through;
+  color: #6c757d;
+}
+
+.delete-task {
+  background: none;
+  border: none;
+  color: #dc3545;
+  font-size: 18px;
+  padding: 4px 8px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.task-card:hover .delete-task {
+  opacity: 1;
+}
+
+.delete-task:hover {
+  background: rgba(220, 53, 69, 0.1);
+  border-radius: 4px;
 } 

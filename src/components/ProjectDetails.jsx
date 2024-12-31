@@ -8,13 +8,16 @@ function ProjectDetails({
   onUpdate, 
   onAddTask, 
   onRemoveTask,
-  onCreateTask
+  onCreateTask,
+  requireNameChange = false
 }) {
   const [notes, setNotes] = useState(project.notes)
   const [searchQuery, setSearchQuery] = useState('')
   const [newTaskName, setNewTaskName] = useState('')
   const [selectedColumn, setSelectedColumn] = useState('Todo')
   const [color, setColor] = useState(project.color)
+  const [name, setName] = useState(project.name)
+  const [hasChanges, setHasChanges] = useState(false)
   const modalRef = useRef(null)
   
   const columns = ['Todo', 'Now', 'Next', 'Later']
@@ -43,22 +46,13 @@ function ProjectDetails({
   }, [onClose])
 
   useEffect(() => {
-    if (notes !== project.notes) {
-      onUpdate({
-        ...project,
-        notes
-      })
-    }
-  }, [notes, project, onUpdate])
-
-  useEffect(() => {
-    if (color !== project.color) {
-      onUpdate({
-        ...project,
-        color
-      })
-    }
-  }, [color, project, onUpdate])
+    const isChanged = 
+      name !== project.name ||
+      notes !== project.notes ||
+      color !== project.color;
+    
+    setHasChanges(isChanged);
+  }, [name, notes, color, project]);
 
   const availableTasks = tasks.filter(task => 
     !project.taskIds.includes(task.id) &&
@@ -78,25 +72,63 @@ function ProjectDetails({
     }
   }
 
+  const handleSave = () => {
+    if (requireNameChange && name === 'Sample Project') {
+      return;
+    }
+    
+    if (name.trim()) {
+      onUpdate({
+        ...project,
+        name: name.trim(),
+        notes,
+        color
+      });
+      onClose();
+    }
+  }
+
+  const getColorName = (hexColor) => {
+    const colorMap = {
+      '#6c757d': 'Gray',
+      '#007bff': 'Blue',
+      '#28a745': 'Green',
+      '#dc3545': 'Red',
+      '#ffc107': 'Yellow',
+      '#17a2b8': 'Cyan',
+      '#6f42c1': 'Purple',
+      '#fd7e14': 'Orange'
+    };
+    return colorMap[hexColor] || 'Custom';
+  };
+
   return (
     <div className="project-details-overlay">
       <div ref={modalRef} className="project-details">
         <div className="project-header">
           <div className="project-header-left">
-            <h2>{project.name}</h2>
-            <div className="color-picker">
-              {colors.map(c => (
-                <button
-                  key={c}
-                  className={`color-option ${c === color ? 'selected' : ''}`}
-                  style={{ backgroundColor: c }}
-                  onClick={() => setColor(c)}
-                  title="Change project color"
-                />
-              ))}
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Name your Project..."
+              className={requireNameChange && name === '' ? 'needs-change' : ''}
+            />
+            <div className="color-picker-section">
+              <span className="color-picker-label">Select project color</span>
+              <div className="color-picker">
+                {colors.map(c => (
+                  <button
+                    key={c}
+                    className={`color-option ${c === color ? 'selected' : ''}`}
+                    style={{ backgroundColor: c }}
+                    onClick={() => setColor(c)}
+                    title={`Select ${getColorName(c)} color`}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-          <button onClick={onClose}>Close</button>
         </div>
 
         <div className="project-section">
@@ -169,6 +201,23 @@ function ProjectDetails({
             placeholder="Add project notes..."
             rows={4}
           />
+        </div>
+
+        <div className="modal-actions">
+          <a 
+            className="cancel-link" 
+            onClick={onClose}
+            href="#"
+          >
+            Cancel
+          </a>
+          <button 
+            className="save-button"
+            onClick={handleSave}
+            disabled={!hasChanges || (requireNameChange && name === 'Sample Project')}
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>

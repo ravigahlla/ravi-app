@@ -100,7 +100,6 @@ task-manager/
 - [ ] Task labels/tags
 - [ ] Multi-select operations
 - [ ] Keyboard shortcuts
-- [ ] Dark mode
 - [ ] Task attachments
 - [ ] Project sharing
 - [ ] Task dependencies
@@ -137,12 +136,6 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Auto-saving for task updates
 
 ### Version 1.3.0
-- Added dark mode support
-- Improved contrast and accessibility
-- Theme toggle button
-- Consistent dark theme across all components
-
-### Version 1.4.0
 - Project color customization
 - Color picker in project details
 - Project color indicators in sidebar

@@ -6,6 +6,7 @@ function TaskDetails({ task, projects, onClose, onUpdate, onDelete }) {
   const [newSubTask, setNewSubTask] = useState('')
   const [subTasks, setSubTasks] = useState(task.subTasks || [])
   const modalRef = useRef(null)
+  const [hasChanges, setHasChanges] = useState(false)
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -19,6 +20,14 @@ function TaskDetails({ task, projects, onClose, onUpdate, onDelete }) {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [onClose])
+
+  // Track changes in notes and subtasks
+  useEffect(() => {
+    const isSubTasksChanged = JSON.stringify(subTasks) !== JSON.stringify(task.subTasks || []);
+    const isNotesChanged = notes !== (task.notes || '');
+    
+    setHasChanges(isNotesChanged || isSubTasksChanged);
+  }, [notes, subTasks, task]);
 
   const handleSave = () => {
     onUpdate({
@@ -119,8 +128,20 @@ function TaskDetails({ task, projects, onClose, onUpdate, onDelete }) {
         </div>
 
         <div className="modal-actions">
-          <button onClick={handleSave}>Save</button>
-          <button onClick={onClose}>Cancel</button>
+          <a 
+            className="cancel-link" 
+            onClick={onClose}
+            href="#"
+          >
+            Cancel
+          </a>
+          <button 
+            className="save-button"
+            onClick={handleSave}
+            disabled={!hasChanges}
+          >
+            Save
+          </button>
         </div>
       </div>
     </div>

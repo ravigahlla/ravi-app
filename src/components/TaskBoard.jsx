@@ -1,5 +1,6 @@
 import { Droppable } from 'react-beautiful-dnd'
 import TaskColumn from './TaskColumn'
+import TaskCard from './TaskCard'
 import './TaskBoard.css'
 import { useState } from 'react'
 import TaskDetails from './TaskDetails'
@@ -12,26 +13,20 @@ function TaskBoard({ tasks, projects, onToggleComplete, onUpdateTask, onDeleteTa
     <div className="task-board">
       {columns.map(column => (
         <div key={column} className="column-container">
-          <Droppable droppableId={column}>
-            {(provided, snapshot) => (
-              <div
-                ref={provided.innerRef}
-                {...provided.droppableProps}
-                className={`droppable-column ${snapshot.isDraggingOver ? 'dragging-over' : ''}`}
-              >
-                <TaskColumn
-                  title={column}
-                  tasks={tasks.filter(task => task.column === column)}
-                  onToggleComplete={onToggleComplete}
-                  onUpdateTask={onUpdateTask}
-                  onDeleteTask={onDeleteTask}
+          <h2>{column}</h2>
+          <div className="tasks">
+            {tasks
+              .filter(task => task.column === column)
+              .map(task => (
+                <TaskCard
+                  key={task.id}
+                  task={task}
                   projects={projects}
-                  onSelectTask={setSelectedTask}
+                  onToggleComplete={onToggleComplete}
+                  onClick={() => setSelectedTask(task)}
                 />
-                {provided.placeholder}
-              </div>
-            )}
-          </Droppable>
+              ))}
+          </div>
         </div>
       ))}
 

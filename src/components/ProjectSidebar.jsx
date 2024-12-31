@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import ProjectDetails from './ProjectDetails'
 import './ProjectSidebar.css'
 
 function ProjectSidebar({ 
@@ -10,6 +11,7 @@ function ProjectSidebar({
   onToggleExpand 
 }) {
   const [newProjectName, setNewProjectName] = useState('')
+  const [showProjectModal, setShowProjectModal] = useState(false)
 
   const handleCreateProject = (e) => {
     e.preventDefault()
@@ -19,28 +21,50 @@ function ProjectSidebar({
     }
   }
 
+  const sampleProject = {
+    id: 'sample',
+    name: 'Sample Project',  // Default name that user must change
+    taskIds: [],
+    notes: 'Add your project notes here...',
+    color: '#6c757d'
+  }
+
   return (
     <div className={`project-sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}>
       <div className="sidebar-header">
-        <h2 className="sidebar-title">Projects</h2>
+        {isExpanded ? (
+          <h2 className="sidebar-title">Projects</h2>
+        ) : (
+          <span className="collapsed-title">Projects</span>
+        )}
         <button 
-          onClick={onToggleExpand}
           className="toggle-button"
-          title={isExpanded ? 'Collapse sidebar' : 'Expand sidebar'}
+          onClick={onToggleExpand}
+          title={isExpanded ? "Collapse sidebar" : "Expand sidebar"}
         >
           {isExpanded ? '◀' : '▶'}
         </button>
       </div>
 
-      <form onSubmit={handleCreateProject} className="add-project-form">
-        <input
-          type="text"
-          value={newProjectName}
-          onChange={(e) => setNewProjectName(e.target.value)}
-          placeholder="New project name..."
-        />
-        <button type="submit">Create</button>
-      </form>
+      {isExpanded ? (
+        <form onSubmit={handleCreateProject} className="new-project-form">
+          <input
+            type="text"
+            value={newProjectName}
+            onChange={(e) => setNewProjectName(e.target.value)}
+            placeholder="New project name..."
+          />
+          <button type="submit">Create</button>
+        </form>
+      ) : (
+        <button 
+          className="add-project-button"
+          onClick={() => setShowProjectModal(true)}
+          title="Create new project"
+        >
+          +
+        </button>
+      )}
 
       <div className="projects-list">
         {projects.map(project => (
@@ -58,6 +82,21 @@ function ProjectSidebar({
           </div>
         ))}
       </div>
+
+      {showProjectModal && (
+        <ProjectDetails
+          project={sampleProject}
+          tasks={[]}
+          onClose={() => setShowProjectModal(false)}
+          onUpdate={(updatedProject) => {
+            if (updatedProject.name.trim() && updatedProject.name !== 'Sample Project') {
+              onCreateProject(updatedProject.name.trim())
+              setShowProjectModal(false)
+            }
+          }}
+          requireNameChange={true}
+        />
+      )}
     </div>
   )
 }

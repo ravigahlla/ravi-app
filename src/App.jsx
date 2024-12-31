@@ -11,7 +11,6 @@ function App() {
   const [projects, setProjects] = useState([])
   const [selectedProjectId, setSelectedProjectId] = useState(null)
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true)
-  const [isDarkMode, setIsDarkMode] = useState(false)
 
   // Helper function to create a task with consistent structure
   const createTaskStructure = (name, column = 'Todo', projectId = null) => {
@@ -179,22 +178,24 @@ function App() {
     return newTask.id
   }
 
+  const handleDeleteTask = (taskId) => {
+    // Remove task from all projects first
+    const updatedProjects = projects.map(project => ({
+      ...project,
+      taskIds: project.taskIds.filter(id => id !== taskId)
+    }));
+    setProjects(updatedProjects);
+
+    // Then remove the task itself
+    setTasks(prevTasks => prevTasks.filter(task => task.id !== taskId));
+  };
+
   useEffect(() => {
     console.log('Tasks state updated:', tasks)
   }, [tasks])
 
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark-mode', isDarkMode)
-  }, [isDarkMode])
-
   return (
     <div className="app-container">
-      <button 
-        onClick={() => setIsDarkMode(!isDarkMode)}
-        className="theme-toggle"
-      >
-        {isDarkMode ? '☀️' : '🌙'}
-      </button>
       <ProjectSidebar
         projects={projects}
         onCreateProject={createProject}
@@ -213,7 +214,7 @@ function App() {
             projects={projects}
             onToggleComplete={toggleComplete}
             onUpdateTask={updateTask}
-            onDeleteTask={deleteTask}
+            onDeleteTask={handleDeleteTask}
           />
         </DragDropContext>
 
