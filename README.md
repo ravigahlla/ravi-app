@@ -117,5 +117,39 @@ task-manager/
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
+## Changelog
+
+### Version 1.0.0
+- Initial release with basic task management
+- Drag and drop functionality between columns
+- Basic task creation and deletion
+
+### Version 1.1.0
+- Added project management system
+- Collapsible project sidebar
+- Ability to create and manage projects
+- Associate tasks with projects
+
+### Version 1.2.0
+- Added task details modal
+- Sub-tasks functionality with completion tracking
+- Notes section for tasks
+- Auto-saving for task updates
+
+### Version 1.3.0
+- Added dark mode support
+- Improved contrast and accessibility
+- Theme toggle button
+- Consistent dark theme across all components
+
+### Version 1.4.0
+- Project color customization
+- Color picker in project details
+- Project color indicators in sidebar
+- Project tags in task details
+- Subtle project color indicators in task cards
+- Auto-saving for project notes
+- Improved project-task association UI
+
 ---
 Built with ❤️ using React and Vite
