@@ -1,8 +1,11 @@
 import { Droppable } from 'react-beautiful-dnd'
 import TaskColumn from './TaskColumn'
 import './TaskBoard.css'
+import { useState } from 'react'
+import TaskDetails from './TaskDetails'
 
-function TaskBoard({ tasks, onToggleComplete, onUpdateTask, onDeleteTask }) {
+function TaskBoard({ tasks, projects, onToggleComplete, onUpdateTask, onDeleteTask }) {
+  const [selectedTask, setSelectedTask] = useState(null)
   const columns = ['Todo', 'Now', 'Next', 'Later', 'Done']
 
   return (
@@ -22,6 +25,8 @@ function TaskBoard({ tasks, onToggleComplete, onUpdateTask, onDeleteTask }) {
                   onToggleComplete={onToggleComplete}
                   onUpdateTask={onUpdateTask}
                   onDeleteTask={onDeleteTask}
+                  projects={projects}
+                  onSelectTask={setSelectedTask}
                 />
                 {provided.placeholder}
               </div>
@@ -29,6 +34,16 @@ function TaskBoard({ tasks, onToggleComplete, onUpdateTask, onDeleteTask }) {
           </Droppable>
         </div>
       ))}
+
+      {selectedTask && (
+        <TaskDetails
+          task={selectedTask}
+          projects={projects}
+          onClose={() => setSelectedTask(null)}
+          onUpdate={onUpdateTask}
+          onDelete={onDeleteTask}
+        />
+      )}
     </div>
   )
 }

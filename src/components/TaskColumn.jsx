@@ -3,7 +3,7 @@ import { Draggable } from 'react-beautiful-dnd'
 import TaskDetails from './TaskDetails'
 import './TaskColumn.css'
 
-function TaskColumn({ title, tasks, onToggleComplete, onUpdateTask, onDeleteTask }) {
+function TaskColumn({ title, tasks, projects, onToggleComplete, onUpdateTask, onDeleteTask }) {
   const [selectedTask, setSelectedTask] = useState(null)
 
   const handleTaskClick = (task) => {
@@ -54,6 +54,7 @@ function TaskColumn({ title, tasks, onToggleComplete, onUpdateTask, onDeleteTask
       {selectedTask && (
         <TaskDetails
           task={selectedTask}
+          projects={projects}
           onClose={() => setSelectedTask(null)}
           onUpdate={handleTaskUpdate}
           onDelete={onDeleteTask}

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { DragDropContext } from 'react-beautiful-dnd'
 import './App.css'
 import TaskBoard from './components/TaskBoard'
@@ -11,15 +11,24 @@ function App() {
   const [projects, setProjects] = useState([])
   const [selectedProjectId, setSelectedProjectId] = useState(null)
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true)
+  const [isDarkMode, setIsDarkMode] = useState(false)
+
+  // Helper function to create a task with consistent structure
+  const createTaskStructure = (name, column = 'Todo', projectId = null) => {
+    return {
+      id: Date.now().toString(),
+      name: name,
+      column: column,
+      isComplete: false,
+      previousColumn: column,
+      notes: '',
+      subTasks: [],
+      projectIds: projectId ? [projectId] : []
+    }
+  }
 
   const addTask = (taskName) => {
-    const newTask = {
-      id: Date.now().toString(),
-      name: taskName,
-      column: 'Todo',
-      isComplete: false,
-      previousColumn: 'Todo'
-    }
+    const newTask = createTaskStructure(taskName)
     setTasks([...tasks, newTask])
   }
 
@@ -75,8 +84,15 @@ function App() {
     setTasks(tasks.filter(task => task.id !== taskId))
   }
 
-  const createProject = (project) => {
-    setProjects([...projects, project])
+  const createProject = (projectName) => {
+    const newProject = {
+      id: Date.now().toString(),
+      name: projectName,
+      taskIds: [],
+      notes: '',
+      color: '#6c757d', // Default color
+    }
+    setProjects([...projects, newProject])
   }
 
   const updateProject = (updatedProject) => {
@@ -129,8 +145,56 @@ function App() {
     }))
   }
 
+  const createTaskFromProject = (taskName, column, projectId) => {
+    console.log('Creating task:', { taskName, column, projectId })
+    
+    // Create the new task
+    const newTask = {
+      id: Date.now().toString(),
+      name: taskName,
+      column: column,
+      isComplete: false,
+      previousColumn: column,
+      notes: '',
+      subTasks: [],
+      projectIds: [projectId]
+    }
+    
+    // Update tasks state
+    setTasks(currentTasks => [...currentTasks, newTask])
+    
+    // Update projects state to include the new task
+    setProjects(currentProjects => 
+      currentProjects.map(p => {
+        if (p.id === projectId) {
+          return {
+            ...p,
+            taskIds: [...p.taskIds, newTask.id]
+          }
+        }
+        return p
+      })
+    )
+
+    return newTask.id
+  }
+
+  useEffect(() => {
+    console.log('Tasks state updated:', tasks)
+  }, [tasks])
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark-mode', isDarkMode)
+  }, [isDarkMode])
+
   return (
     <div className="app-container">
+      <button 
+        onClick={() => setIsDarkMode(!isDarkMode)}
+        className="theme-toggle"
+      >
+        {isDarkMode ? '☀️' : '🌙'}
+      </button>
       <ProjectSidebar
         projects={projects}
         onCreateProject={createProject}
@@ -161,6 +225,7 @@ function App() {
             onUpdate={updateProject}
             onAddTask={(taskId) => addTaskToProject(selectedProjectId, taskId)}
             onRemoveTask={(taskId) => removeTaskFromProject(selectedProjectId, taskId)}
+            onCreateTask={(name, column) => createTaskFromProject(name, column, selectedProjectId)}
           />
         )}
       </div>

@@ -14,13 +14,7 @@ function ProjectSidebar({
   const handleCreateProject = (e) => {
     e.preventDefault()
     if (newProjectName.trim()) {
-      onCreateProject({
-        id: Date.now().toString(),
-        name: newProjectName,
-        notes: '',
-        taskIds: [],
-        createdAt: Date.now()
-      })
+      onCreateProject(newProjectName.trim())
       setNewProjectName('')
     }
   }
@@ -29,7 +23,6 @@ function ProjectSidebar({
     <div className={`project-sidebar ${isExpanded ? 'expanded' : 'collapsed'}`}>
       <div className="sidebar-header">
         <h2 className="sidebar-title">Projects</h2>
-        <span className="collapsed-title">Projects</span>
         <button 
           onClick={onToggleExpand}
           className="toggle-button"
@@ -39,31 +32,31 @@ function ProjectSidebar({
         </button>
       </div>
 
-      <div className="sidebar-content">
-        <form onSubmit={handleCreateProject} className="new-project-form">
-          <input
-            type="text"
-            value={newProjectName}
-            onChange={(e) => setNewProjectName(e.target.value)}
-            placeholder="New project name..."
-          />
-          <button type="submit">Create</button>
-        </form>
+      <form onSubmit={handleCreateProject} className="add-project-form">
+        <input
+          type="text"
+          value={newProjectName}
+          onChange={(e) => setNewProjectName(e.target.value)}
+          placeholder="New project name..."
+        />
+        <button type="submit">Create</button>
+      </form>
 
-        <div className="projects-list">
-          {projects.map(project => (
+      <div className="projects-list">
+        {projects.map(project => (
+          <div
+            key={project.id}
+            className={`project-item ${project.id === selectedProjectId ? 'selected' : ''}`}
+            onClick={() => onSelectProject(project.id)}
+          >
             <div 
-              key={project.id}
-              className={`project-item ${selectedProjectId === project.id ? 'selected' : ''}`}
-              onClick={() => onSelectProject(project.id)}
-            >
-              <span className="project-name">{project.name}</span>
-              <span className="task-count">
-                {project.taskIds.length}
-              </span>
-            </div>
-          ))}
-        </div>
+              className="project-color-indicator"
+              style={{ backgroundColor: project.color }}
+            />
+            <span className="project-name">{project.name}</span>
+            <span className="task-count">{project.taskIds.length}</span>
+          </div>
+        ))}
       </div>
     </div>
   )

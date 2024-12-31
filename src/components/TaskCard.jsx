@@ -1,20 +1,25 @@
 function TaskCard({ task, projects }) {
-  const taskProjects = projects.filter(p => 
-    task.projectIds?.includes(p.id)
-  )
-
   return (
     <div className="task-card">
-      <span>{task.name}</span>
-      {taskProjects.length > 0 && (
-        <div className="project-badges">
-          {taskProjects.map(project => (
-            <span key={project.id} className="project-badge">
-              {project.name}
-            </span>
-          ))}
+      <div className="task-content">
+        <span className={task.isComplete ? 'completed' : ''}>
+          {task.name}
+        </span>
+        <div className="task-project-indicators">
+          {task.projectIds?.map(projectId => {
+            const project = projects.find(p => p.id === projectId)
+            if (!project) return null
+            return (
+              <div
+                key={project.id}
+                className="project-indicator"
+                style={{ backgroundColor: project.color }}
+                title={project.name}
+              />
+            )
+          })}
         </div>
-      )}
+      </div>
     </div>
   )
 } 

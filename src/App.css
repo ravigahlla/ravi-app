@@ -70,3 +70,73 @@ h1 {
   text-align: center;
   color: #333;
 }
+
+/* Light mode (default) */
+:root {
+  --bg-primary: #ffffff;
+  --bg-secondary: #f8f9fa;
+  --bg-tertiary: #e9ecef;
+  --text-primary: #212529;
+  --text-secondary: #6c757d;
+  --border-color: #dee2e6;
+  --accent-primary: #007bff;
+  --accent-secondary: #6c757d;
+  --column-bg: #f8f9fa;
+}
+
+/* Dark mode */
+:root.dark-mode {
+  --bg-primary: #2a2a2a;
+  --bg-secondary: #333333;
+  --bg-tertiary: #404040;
+  --text-primary: #ffffff;
+  --text-secondary: #cccccc;
+  --border-color: #404040;
+  --accent-primary: #0056b3;
+  --accent-secondary: #6c757d;
+  --column-bg: #333333;
+}
+
+.task-board {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+.column-container {
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+}
+
+.column-title {
+  color: var(--text-primary);
+}
+
+.task-card {
+  background: var(--bg-primary);
+  border: 1px solid var(--border-color);
+  color: var(--text-primary);
+}
+
+.theme-toggle {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 8px;
+  border-radius: 50%;
+  border: none;
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  z-index: 1000;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2em;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.theme-toggle:hover {
+  background: var(--bg-tertiary);
+}

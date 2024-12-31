@@ -1,0 +1,12 @@
+.task-project-indicators {
+  display: flex;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.project-indicator {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0.8;
+} 
