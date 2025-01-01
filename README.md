@@ -1,6 +1,6 @@
-# Task Manager
+# Raviflo
 
-A dynamic task management application built with React that helps users organize tasks and group them into projects. The app features a kanban-style board with drag-and-drop functionality and a collapsible project sidebar.
+A personal task management and goal manifestation application built with React that helps users organize tasks and group them into projects. The app features a kanban-style board with drag-and-drop functionality and a collapsible project sidebar.
 
 ## Features
 
@@ -144,6 +144,26 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 - Auto-saving for project notes
 - Improved project-task association UI
 
+### Version 1.4.0
+- Migrated from Firebase to Auth0 authentication
+  - Enhanced privacy by removing AI-integrated services
+  - Secure user authentication flow
+  - Profile management with Auth0
+  - Configurable social login options
+- Improved task card UI/UX
+  - Left-aligned task text for better readability
+  - Refined spacing and layout
+  - Enhanced interaction states
+  - Improved drag-and-drop visual feedback
+- Profile features
+  - User avatar support
+  - Account settings management
+  - Secure logout functionality
+- General improvements
+  - Better error handling
+  - Smoother transitions
+  - More consistent styling
+
 ## Testing
 The application uses Jest and React Testing Library for testing. Test files are located in `__tests__` directories next to the components they test.
 
@@ -174,3 +194,17 @@ The application follows accessibility best practices:
 
 ---
 Built with ❤️ using React and Vite
+
+## Features
+
+- Drag-and-drop task management
+- Project organization and tracking
+- Real-time task status updates
+- User authentication via Auth0
+- Profile management
+- Project-based task filtering
+- Responsive design
+- Intuitive task layout
+  - Left-aligned task text for better readability
+  - Clean, consistent spacing
+  - Improved task card interactions

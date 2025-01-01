@@ -6,12 +6,16 @@ import TaskBoard from './components/TaskBoard'
 import AddTaskForm from './components/AddTaskForm'
 import ProjectSidebar from './components/ProjectSidebar'
 import ProjectDetails from './components/ProjectDetails'
+import { useAuth } from './contexts/AuthContext'
+import Login from './components/Login'
+import ProfileMenu from './components/ProfileMenu'
 
 function App() {
   const [tasks, setTasks] = useState([])
   const [projects, setProjects] = useState([])
   const [selectedProjectId, setSelectedProjectId] = useState(null)
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true)
+  const { user } = useAuth()
 
   // Helper function to create a task with consistent structure
   const createTaskStructure = (name, column = 'Todo', projectId = null) => {
@@ -222,54 +226,49 @@ function App() {
   }, [tasks])
 
   return (
-    <div className="app-container">
-      <Toaster 
-        position="bottom-right"
-        toastOptions={{
-          duration: 3000,
-          style: {
-            padding: '12px 16px',
-            borderRadius: '6px',
-            fontSize: '14px',
-            fontWeight: '500'
-          }
-        }}
-      />
-      <ProjectSidebar
-        projects={projects}
-        onCreateProject={createProject}
-        onSelectProject={setSelectedProjectId}
-        selectedProjectId={selectedProjectId}
-        isExpanded={isSidebarExpanded}
-        onToggleExpand={() => setIsSidebarExpanded(!isSidebarExpanded)}
-      />
-
-      <div className={`main-content ${isSidebarExpanded ? 'sidebar-expanded' : ''}`}>
-        <h1>Task Manager</h1>
-        <AddTaskForm onAddTask={addTask} />
-        <DragDropContext onDragEnd={handleDragEnd}>
-          <TaskBoard 
-            tasks={tasks}
-            projects={projects}
-            onToggleComplete={toggleComplete}
-            onUpdateTask={updateTask}
-            onDeleteTask={handleDeleteTask}
-          />
-        </DragDropContext>
-
-        {selectedProjectId && (
-          <ProjectDetails
-            project={projects.find(p => p.id === selectedProjectId)}
-            tasks={tasks}
-            onClose={() => setSelectedProjectId(null)}
-            onUpdate={updateProject}
-            onAddTask={(taskId) => addTaskToProject(selectedProjectId, taskId)}
-            onRemoveTask={(taskId) => removeTaskFromProject(selectedProjectId, taskId)}
-            onCreateTask={(name, column) => createTaskFromProject(name, column, selectedProjectId)}
-          />
-        )}
+    !user ? (
+      <Login />
+    ) : (
+      <div className="app-container">
+        <ProjectSidebar
+          projects={projects}
+          onCreateProject={createProject}
+          onSelectProject={setSelectedProjectId}
+          selectedProjectId={selectedProjectId}
+          isExpanded={isSidebarExpanded}
+          onToggleExpand={() => setIsSidebarExpanded(!isSidebarExpanded)}
+        />
+        <div className={isSidebarExpanded ? 'sidebar-expanded' : ''}>
+          <div className="app-header">
+            <h1>Raviflo</h1>
+            <ProfileMenu />
+          </div>
+          <div className="main-content">
+            <AddTaskForm onAddTask={addTask} />
+            <DragDropContext onDragEnd={handleDragEnd}>
+              <TaskBoard 
+                tasks={tasks}
+                projects={projects}
+                onToggleComplete={toggleComplete}
+                onUpdateTask={updateTask}
+                onDeleteTask={handleDeleteTask}
+              />
+            </DragDropContext>
+            {selectedProjectId && (
+              <ProjectDetails
+                project={projects.find(p => p.id === selectedProjectId)}
+                tasks={tasks}
+                onClose={() => setSelectedProjectId(null)}
+                onUpdate={updateProject}
+                onAddTask={(taskId) => addTaskToProject(selectedProjectId, taskId)}
+                onRemoveTask={(taskId) => removeTaskFromProject(selectedProjectId, taskId)}
+                onCreateTask={(name, column) => createTaskFromProject(name, column, selectedProjectId)}
+              />
+            )}
+          </div>
+        </div>
       </div>
-    </div>
+    )
   )
 }
 
