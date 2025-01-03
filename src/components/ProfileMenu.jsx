@@ -9,6 +9,10 @@ export default function ProfileMenu() {
   const { user, logout } = useAuth()
   const [avatarError, setAvatarError] = useState(false)
 
+  const photoURL = user?.photoURL || user?.picture
+  const displayName = user?.name || 'User'
+  const initial = displayName.charAt(0).toUpperCase()
+
   const handleLogout = async () => {
     try {
       await logout()
@@ -27,16 +31,16 @@ export default function ProfileMenu() {
         className="profile-button"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
       >
-        {user.photoURL && !avatarError ? (
+        {photoURL && !avatarError ? (
           <img 
-            src={user.photoURL} 
+            src={photoURL} 
             alt="Profile" 
             className="profile-avatar"
             onError={handleImageError}
           />
         ) : (
           <div className="profile-avatar-placeholder">
-            {user.email[0].toUpperCase()}
+            {initial}
           </div>
         )}
       </button>

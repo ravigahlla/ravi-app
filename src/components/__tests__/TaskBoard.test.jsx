@@ -1,48 +1,64 @@
 import { render, screen, fireEvent } from '@testing-library/react'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import TaskBoard from '../TaskBoard'
 
+// Mock react-beautiful-dnd
 jest.mock('react-beautiful-dnd', () => ({
   Droppable: ({ children }) => 
     children({
-      draggableProps: {},
+      droppableProps: {
+        'data-rbd-droppable-id': 'test-id',
+        'data-rbd-droppable-context-id': '1'
+      },
       innerRef: jest.fn(),
-      droppableProps: {},
-      placeholder: null,
-      snapshot: {
-        isDraggingOver: false,
-        draggingFromThisWith: null,
-        draggingOverWith: null,
-        isUsingPlaceholder: false
-      }
+      placeholder: null
+    }, {
+      isDraggingOver: false,
+      draggingFromThisWith: null,
+      draggingOverWith: null,
+      isUsingPlaceholder: false
     }),
-  Draggable: ({ children }) => 
+  DragDropContext: ({ children }) => children,
+  Draggable: ({ children, draggableId, index }) =>
     children({
-      draggableProps: {},
+      draggableProps: {
+        'data-rbd-draggable-context-id': '1',
+        'data-rbd-draggable-id': draggableId,
+        style: {
+          transform: null
+        }
+      },
       innerRef: jest.fn(),
-      dragHandleProps: {},
-      snapshot: {
-        isDragging: false,
-        draggingOver: null
+      dragHandleProps: {
+        'data-rbd-drag-handle-draggable-id': draggableId,
+        'data-rbd-drag-handle-context-id': '1',
+        'aria-labelledby': `draggable-${draggableId}`,
+        tabIndex: 0,
+        draggable: false,
+        onDragStart: jest.fn()
       }
     }, {
       isDragging: false,
-      draggingOver: null
+      draggingOver: null,
+      isDropAnimating: false
     }),
 }))
 
 describe('TaskBoard', () => {
-  const mockTasks = [
-    { id: '1', name: 'Task 1', column: 'Todo', isComplete: false },
-    { id: '2', name: 'Task 2', column: 'Done', isComplete: true }
-  ]
-
   const mockProps = {
-    tasks: mockTasks,
+    tasks: [
+      { id: '1', name: 'Task 1', column: 'Todo' },
+      { id: '2', name: 'Task 2', column: 'Now' },
+    ],
     projects: [],
+    onTaskClick: jest.fn(),
     onToggleComplete: jest.fn(),
-    onUpdateTask: jest.fn(),
-    onDeleteTask: jest.fn()
+    onDeleteTask: jest.fn(),
   }
+
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
 
   it('renders all columns', () => {
     render(<TaskBoard {...mockProps} />)
@@ -55,14 +71,32 @@ describe('TaskBoard', () => {
 
   it('displays tasks in correct columns', () => {
     render(<TaskBoard {...mockProps} />)
-    expect(screen.getByText('Task 1')).toBeInTheDocument()
-    expect(screen.getByText('Task 2')).toBeInTheDocument()
+    const todoColumn = screen.getByText('Todo').closest('.task-column')
+    const nowColumn = screen.getByText('Now').closest('.task-column')
+    
+    expect(todoColumn).toHaveTextContent('Task 1')
+    expect(nowColumn).toHaveTextContent('Task 2')
   })
 
   it('shows task details when clicking a task', () => {
     render(<TaskBoard {...mockProps} />)
     const task = screen.getByText('Task 1')
     fireEvent.click(task)
-    expect(screen.getByRole('dialog')).toBeInTheDocument()
+    expect(mockProps.onTaskClick).toHaveBeenCalledWith(mockProps.tasks[0])
+  })
+
+  it('handles task completion toggle', () => {
+    render(<TaskBoard {...mockProps} />)
+    const checkbox = screen.getAllByRole('checkbox')[0]
+    fireEvent.click(checkbox)
+    expect(mockProps.onToggleComplete).toHaveBeenCalledWith('1')
+  })
+
+  it('handles task deletion', () => {
+    render(<TaskBoard {...mockProps} />)
+    const deleteButton = screen.getAllByRole('button', { name: /×/i })[0]
+    window.confirm = jest.fn(() => true)
+    fireEvent.click(deleteButton)
+    expect(mockProps.onDeleteTask).toHaveBeenCalledWith('1')
   })
 }) 

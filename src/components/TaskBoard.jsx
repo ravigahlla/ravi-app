@@ -1,48 +1,34 @@
-import { Droppable, Draggable } from 'react-beautiful-dnd'
+import { Droppable } from 'react-beautiful-dnd'
 import TaskCard from './TaskCard'
 import './TaskBoard.css'
-import { useState } from 'react'
-import TaskDetails from './TaskDetails'
 
-function TaskBoard({ tasks, projects, onToggleComplete, onUpdateTask, onDeleteTask }) {
-  const [selectedTask, setSelectedTask] = useState(null)
+export default function TaskBoard({ tasks, projects, onTaskClick, onToggleComplete, onDeleteTask }) {
   const columns = ['Todo', 'Now', 'Next', 'Later', 'Done']
 
   return (
     <div className="task-board">
       {columns.map(column => (
-        <div key={column} className="column-container">
+        <div key={column} className="task-column">
           <h2>{column}</h2>
           <Droppable droppableId={column}>
-            {(provided, snapshot = {}) => (
+            {(provided, snapshot) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={`tasks ${snapshot?.isDraggingOver ? 'dragging-over' : ''}`}
+                className={`task-list ${snapshot?.isDraggingOver ? 'drop-target' : ''}`}
               >
                 {tasks
                   .filter(task => task.column === column)
                   .map((task, index) => (
-                    <Draggable
+                    <TaskCard
                       key={task.id}
-                      draggableId={task.id}
+                      task={task}
                       index={index}
-                    >
-                      {(provided, snapshot) => (
-                        <div
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <TaskCard
-                            task={task}
-                            projects={projects}
-                            onToggleComplete={onToggleComplete}
-                            onClick={() => setSelectedTask(task)}
-                          />
-                        </div>
-                      )}
-                    </Draggable>
+                      projects={projects}
+                      onTaskClick={onTaskClick}
+                      onToggleComplete={onToggleComplete}
+                      onDelete={onDeleteTask}
+                    />
                   ))}
                 {provided.placeholder}
               </div>
@@ -50,19 +36,6 @@ function TaskBoard({ tasks, projects, onToggleComplete, onUpdateTask, onDeleteTa
           </Droppable>
         </div>
       ))}
-
-      {selectedTask && (
-        <TaskDetails
-          task={selectedTask}
-          projects={projects}
-          onClose={() => setSelectedTask(null)}
-          onUpdate={onUpdateTask}
-          onDelete={onDeleteTask}
-          onToggleComplete={onToggleComplete}
-        />
-      )}
     </div>
   )
-}
-
-export default TaskBoard 
+} 

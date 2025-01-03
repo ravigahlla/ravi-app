@@ -9,12 +9,14 @@ import ProjectDetails from './components/ProjectDetails'
 import { useAuth } from './contexts/AuthContext'
 import Login from './components/Login'
 import ProfileMenu from './components/ProfileMenu'
+import TaskDetails from './components/TaskDetails'
 
 function App() {
   const [tasks, setTasks] = useState([])
   const [projects, setProjects] = useState([])
   const [selectedProjectId, setSelectedProjectId] = useState(null)
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true)
+  const [selectedTask, setSelectedTask] = useState(null)
   const { user } = useAuth()
 
   // Helper function to create a task with consistent structure
@@ -221,6 +223,28 @@ function App() {
     });
   };
 
+  const handleTaskClick = (task) => {
+    setSelectedTask(task)
+  }
+
+  const handleTaskUpdate = (updatedTask) => {
+    setTasks(tasks.map(task => 
+      task.id === updatedTask.id 
+        ? {
+            ...task,
+            ...updatedTask,
+            subTasks: updatedTask.subTasks || [],  // Ensure subTasks is always an array
+            notes: updatedTask.notes || '',        // Ensure notes is always a string
+            isComplete: updatedTask.isComplete     // Update completion status
+          }
+        : task
+    ))
+  }
+
+  const handleTaskDelete = (taskId) => {
+    setTasks(tasks.filter(task => task.id !== taskId))
+  }
+
   useEffect(() => {
     console.log('Tasks state updated:', tasks)
   }, [tasks])
@@ -230,6 +254,18 @@ function App() {
       <Login />
     ) : (
       <div className="app-container">
+        <button 
+          className="mobile-menu-toggle"
+          onClick={() => setIsSidebarExpanded(!isSidebarExpanded)}
+        >
+          {isSidebarExpanded ? '✕' : '☰'}
+        </button>
+        {isSidebarExpanded && (
+          <div 
+            className="sidebar-overlay visible"
+            onClick={() => setIsSidebarExpanded(false)}
+          />
+        )}
         <ProjectSidebar
           projects={projects}
           onCreateProject={createProject}
@@ -238,7 +274,7 @@ function App() {
           isExpanded={isSidebarExpanded}
           onToggleExpand={() => setIsSidebarExpanded(!isSidebarExpanded)}
         />
-        <div className={isSidebarExpanded ? 'sidebar-expanded' : ''}>
+        <div className={`main-wrapper ${isSidebarExpanded ? 'sidebar-expanded' : ''}`}>
           <div className="app-header">
             <h1>Raviflo</h1>
             <ProfileMenu />
@@ -250,7 +286,7 @@ function App() {
                 tasks={tasks}
                 projects={projects}
                 onToggleComplete={toggleComplete}
-                onUpdateTask={updateTask}
+                onTaskClick={handleTaskClick}
                 onDeleteTask={handleDeleteTask}
               />
             </DragDropContext>
@@ -267,6 +303,17 @@ function App() {
             )}
           </div>
         </div>
+        {selectedTask && (
+          <TaskDetails
+            task={selectedTask}
+            projects={projects}
+            onClose={() => setSelectedTask(null)}
+            onUpdate={handleTaskUpdate}
+            onDelete={handleTaskDelete}
+            onToggleComplete={handleTaskUpdate}
+            onAddToProject={(projectId) => addTaskToProject(projectId, selectedTask.id)}
+          />
+        )}
       </div>
     )
   )

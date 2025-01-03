@@ -2,7 +2,11 @@ import { useAuth } from '../contexts/AuthContext'
 import './Login.css'
 
 export default function Login() {
-  const { login } = useAuth()
+  const { login, isAuthenticated } = useAuth()
+
+  if (isAuthenticated) {
+    return null
+  }
 
   return (
     <div className="login-container">

@@ -1,4 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/react'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import TaskCard from '../TaskCard'
 
 describe('TaskCard', () => {
@@ -6,38 +7,42 @@ describe('TaskCard', () => {
     id: '1',
     name: 'Test Task',
     isComplete: false,
-    projectIds: []
+    column: 'Todo'
   }
 
-  const mockProjects = []
-  const mockToggleComplete = jest.fn()
-  const mockOnClick = jest.fn()
+  const mockProps = {
+    task: mockTask,
+    projects: [],
+    index: 0,
+    onToggleComplete: jest.fn(),
+    onDelete: jest.fn(),
+    onUpdate: jest.fn(),
+    onTaskClick: jest.fn()
+  }
+
+  const renderWithDnd = (ui) => {
+    return render(
+      <DragDropContext onDragEnd={() => {}}>
+        <Droppable droppableId="test-droppable">
+          {(provided) => (
+            <div ref={provided.innerRef} {...provided.droppableProps}>
+              {ui}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    )
+  }
 
   it('renders task name correctly', () => {
-    render(
-      <TaskCard
-        task={mockTask}
-        projects={mockProjects}
-        onToggleComplete={mockToggleComplete}
-        onClick={mockOnClick}
-      />
-    )
-
+    renderWithDnd(<TaskCard {...mockProps} />)
     expect(screen.getByText('Test Task')).toBeInTheDocument()
   })
 
-  it('calls onToggleComplete when checkbox is clicked', () => {
-    render(
-      <TaskCard
-        task={mockTask}
-        projects={mockProjects}
-        onToggleComplete={mockToggleComplete}
-        onClick={mockOnClick}
-      />
-    )
-
-    const checkbox = screen.getByRole('checkbox')
-    fireEvent.click(checkbox)
-    expect(mockToggleComplete).toHaveBeenCalledWith(mockTask.id)
+  it('calls onTaskClick when clicked', () => {
+    renderWithDnd(<TaskCard {...mockProps} />)
+    fireEvent.click(screen.getByText('Test Task'))
+    expect(mockProps.onTaskClick).toHaveBeenCalledWith(mockTask)
   })
 }) 

@@ -164,6 +164,23 @@ This project is licensed under the MIT License - see the LICENSE file for detail
   - Smoother transitions
   - More consistent styling
 
+### Version 1.4.1
+- Improved test infrastructure and organization
+  - Standardized test file locations in `__tests__` directories
+  - Updated Jest configuration for better test management
+  - Removed duplicate test files
+- Enhanced component testing reliability
+  - Added data-testid attributes for reliable test selection
+  - Updated tests to match current save-based workflow
+  - Fixed subtask button identification in tests
+- Improved accessibility
+  - Added ARIA labels to interactive elements
+  - Enhanced screen reader support in TaskDetails
+- Test maintenance improvements
+  - Consolidated test configuration
+  - Better test organization
+  - More reliable component testing
+
 ## Testing
 The application uses Jest and React Testing Library for testing. Test files are located in `__tests__` directories next to the components they test.
 
@@ -208,3 +225,39 @@ Built with ❤️ using React and Vite
   - Left-aligned task text for better readability
   - Clean, consistent spacing
   - Improved task card interactions
+
+# Test Configuration and Component Updates
+
+## Major Changes
+1. Fixed test organization and configuration:
+   - Updated Jest configuration to properly target tests in `__tests__` directories
+   - Removed duplicate test files to prevent conflicts
+   - Standardized test location structure
+
+2. Updated TaskDetails component and tests:
+   - Added proper test IDs for reliable component testing
+   - Improved accessibility with ARIA labels
+   - Updated tests to match current save-based workflow
+   - Fixed subtask button identification in tests
+
+## Technical Details
+- Modified `jest.config.js` to use specific test paths:
+  ```javascript
+  testMatch: [
+    "<rootDir>/src/components/__tests__/**/*.test.{js,jsx}",
+    "<rootDir>/src/contexts/**/*.test.{js,jsx}"
+  ]
+  ```
+- Added data-testid attributes for reliable test selection
+- Maintained all existing functionality while improving test reliability
+
+## Impact
+- All tests now pass correctly
+- Test organization is more maintainable
+- Component functionality remains unchanged
+- Improved test reliability and maintainability
+
+## Next Steps
+- Consider adding more comprehensive test coverage
+- Look into addressing react-beautiful-dnd deprecation warnings
+- Continue improving component accessibility

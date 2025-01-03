@@ -1,15 +1,18 @@
 import { Draggable } from 'react-beautiful-dnd'
 import './TaskCard.css'
 
-export default function TaskCard({ task, index, onToggleComplete, onTaskClick, onDeleteTask, projects }) {
-  const handleClick = (e) => {
-    // Prevent opening details when clicking checkbox or delete button
-    if (
-      !e.target.classList.contains('task-checkbox') && 
-      !e.target.classList.contains('delete-task')
-    ) {
-      onTaskClick(task)
+function TaskCard({ task, index, projects, onToggleComplete, onDelete, onTaskClick }) {
+  const handleClick = (e, isDragging) => {
+    // Only handle clicks if we're not dragging and not clicking a button or checkbox
+    if (isDragging || e.target.closest('button, input[type="checkbox"]')) {
+      return;
     }
+    onTaskClick(task);
+  }
+
+  const handleCheckboxChange = (e) => {
+    e.stopPropagation() // Prevent the click from bubbling up
+    onToggleComplete(task.id)
   }
 
   return (
@@ -19,50 +22,54 @@ export default function TaskCard({ task, index, onToggleComplete, onTaskClick, o
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
-          className={`task-card ${task.isComplete ? 'completed' : ''} ${
-            snapshot.isDragging ? 'dragging' : ''
-          }`}
-          onClick={handleClick}
+          className={`task-card ${snapshot?.isDragging ? 'dragging' : ''}`}
+          onClick={(e) => handleClick(e, snapshot?.isDragging)}
+          data-testid="task-card"
         >
-          <input
-            type="checkbox"
-            checked={task.isComplete}
-            onChange={() => onToggleComplete(task.id)}
-            className="task-checkbox"
-          />
           <div className="task-content">
-            <div className="task-header">
-              <span className="task-name">{task.name}</span>
-            </div>
-            {task.projectIds?.length > 0 && (
-              <div className="task-project-labels">
-                {task.projectIds.map(projectId => {
-                  const project = projects.find(p => p.id === projectId)
-                  if (!project) return null
-                  return (
-                    <span
-                      key={projectId}
-                      className="project-label"
-                      style={{ backgroundColor: project.color + '20', color: project.color }}
-                    >
-                      {project.name}
-                    </span>
-                  )
-                })}
-              </div>
-            )}
+            <input
+              type="checkbox"
+              className="task-checkbox"
+              checked={task.isComplete}
+              onChange={handleCheckboxChange}
+              onClick={(e) => e.stopPropagation()}
+              data-testid="task-checkbox"
+            />
+            <span className={task.isComplete ? 'completed' : ''}>
+              {task.name}
+            </span>
           </div>
-          <button
-            className="delete-task"
-            onClick={(e) => {
-              e.stopPropagation()
-              onDeleteTask(task.id)
-            }}
-          >
-            ×
-          </button>
+          <div className="task-actions">
+            {task.projectIds?.map(projectId => {
+              const project = projects.find(p => p.id === projectId)
+              if (!project) return null
+              return (
+                <span 
+                  key={project.id}
+                  className="project-tag"
+                  style={{ backgroundColor: project.color }}
+                >
+                  {project.name}
+                </span>
+              )
+            })}
+            <button 
+              className="delete-button"
+              onClick={(e) => {
+                e.stopPropagation()
+                if (window.confirm('Are you sure you want to delete this task?')) {
+                  onDelete(task.id)
+                }
+              }}
+              data-testid="delete-task-button"
+            >
+              ×
+            </button>
+          </div>
         </div>
       )}
     </Draggable>
   )
-} 
+}
+
+export default TaskCard 

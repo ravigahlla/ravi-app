@@ -1,32 +1,24 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useCallback } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
 
 const AuthContext = createContext()
-
-export function useAuth() {
-  return useContext(AuthContext)
-}
 
 export function AuthProvider({ children }) {
   const {
     isAuthenticated,
     user,
     loginWithRedirect,
-    logout: auth0Logout,
-    isLoading,
+    logout,
     getAccessTokenSilently
   } = useAuth0()
 
-  const login = () => {
-    return loginWithRedirect()
-  }
-
-  const logout = () => {
-    return auth0Logout({ returnTo: window.location.origin })
-  }
+  const login = useCallback(() => {
+    loginWithRedirect()
+  }, [loginWithRedirect])
 
   const value = {
-    user: isAuthenticated ? user : null,
+    isAuthenticated,
+    user,
     login,
     logout,
     getAccessToken: getAccessTokenSilently
@@ -34,7 +26,15 @@ export function AuthProvider({ children }) {
 
   return (
     <AuthContext.Provider value={value}>
-      {!isLoading && children}
+      {children}
     </AuthContext.Provider>
   )
+}
+
+export function useAuth() {
+  const context = useContext(AuthContext)
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider')
+  }
+  return context
 } 
