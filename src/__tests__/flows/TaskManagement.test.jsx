@@ -24,8 +24,8 @@ describe('Task Management Flow', () => {
     )
 
     // 1. Create a new task
-    const taskForm = screen.getByTestId('add-task-form')
-    const taskInput = within(taskForm).getByPlaceholderText(/enter new task/i)
+    const taskForm = screen.getByTestId('header-task-form')
+    const taskInput = within(taskForm).getByPlaceholderText(/new task/i)
     fireEvent.change(taskInput, { target: { value: 'New Test Task' } })
     fireEvent.submit(taskForm)
 

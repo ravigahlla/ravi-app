@@ -1,29 +1,21 @@
-import { render, screen, fireEvent } from '@testing-library/react'
-import { AuthProvider } from '../../contexts/AuthContext'
-import { useAuth } from '../../contexts/AuthContext'
+import { render, screen } from '@testing-library/react'
 import App from '../../App'
+import { AuthProvider } from '../../contexts/AuthContext'
 
-// Mock Auth0 context
-jest.mock('../../contexts/AuthContext')
+describe('App Component', () => {
+  it('renders header with correct layout', () => {
+    render(
+      <AuthProvider>
+        <App />
+      </AuthProvider>
+    )
 
-describe('App', () => {
-  beforeEach(() => {
-    // Mock the auth context for each test
-    useAuth.mockReturnValue({
-      user: {
-        name: 'Test User',
-        email: 'test@example.com'
-      },
-      isAuthenticated: true,
-      login: jest.fn(),
-      logout: jest.fn()
-    })
-  })
+    const header = screen.getByTestId('app-header')
+    expect(header).toHaveClass('app-header')
 
-  it('renders main components', () => {
-    render(<App />)
+    // Verify header contains all required elements
     expect(screen.getByText('Raviflo')).toBeInTheDocument()
+    expect(screen.getByTestId('header-task-form')).toBeInTheDocument()
+    expect(screen.getByPlaceholderText(/new task/i)).toBeInTheDocument()
   })
-
-  // ... other tests
 }) 

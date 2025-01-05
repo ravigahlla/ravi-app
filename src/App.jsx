@@ -281,15 +281,35 @@ function App() {
           onToggleExpand={() => setIsSidebarExpanded(!isSidebarExpanded)}
         />
         <div className={`main-wrapper ${isSidebarExpanded ? 'sidebar-expanded' : ''}`}>
-          <div className="app-header">
+          <div className="app-header" data-testid="app-header">
             <h1>Raviflo</h1>
+            <form 
+              className="header-task-form"
+              data-testid="header-task-form"
+              onSubmit={(e) => {
+                e.preventDefault()
+                const form = e.target
+                const input = form.elements.taskName
+                if (!input.value.trim()) {
+                  toast.error('Task name cannot be empty')
+                  return
+                }
+                addTask(input.value.trim())
+                toast.success('Task created')
+                form.reset()
+              }}
+            >
+              <input
+                name="taskName"
+                type="text"
+                placeholder="New task..."
+                className="header-task-input"
+              />
+              <button type="submit">Create</button>
+            </form>
             <ProfileMenu />
           </div>
           <div className="main-content">
-            <AddTaskForm 
-              onAddTask={addTask} 
-              data-testid="add-task-form"
-            />
             <DragDropContext onDragEnd={handleDragEnd}>
               <TaskBoard 
                 tasks={tasks}

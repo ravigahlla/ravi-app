@@ -43,8 +43,8 @@ describe('Task Organization Flow', () => {
 
     // Step 2: Create multiple tasks
     const createTaskFlow = async (taskName) => {
-      const taskForm = screen.getByTestId('add-task-form')
-      const taskInput = within(taskForm).getByPlaceholderText(/enter new task/i)
+      const taskForm = screen.getByTestId('header-task-form')
+      const taskInput = within(taskForm).getByPlaceholderText(/new task/i)
       fireEvent.change(taskInput, { target: { value: taskName } })
       
       fireEvent.submit(taskForm)
