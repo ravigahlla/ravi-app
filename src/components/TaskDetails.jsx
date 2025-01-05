@@ -81,7 +81,7 @@ function TaskDetails({ task, projects, onClose, onUpdate, onDelete, onToggleComp
   }
 
   const handleProjectSelect = (projectId) => {
-    onAddToProject(task.id, projectId)
+    onAddToProject(projectId)
     setShowProjectSelector(false)
   }
 

@@ -47,7 +47,11 @@ function ProjectSidebar({
       </div>
 
       {isExpanded ? (
-        <form onSubmit={handleCreateProject} className="new-project-form">
+        <form 
+          className="new-project-form" 
+          onSubmit={handleCreateProject}
+          data-testid="new-project-form"
+        >
           <input
             type="text"
             value={newProjectName}
@@ -66,7 +70,7 @@ function ProjectSidebar({
         </button>
       )}
 
-      <div className="projects-list">
+      <div className="projects-list" data-testid="projects-list">
         {projects.map(project => (
           <div
             key={project.id}

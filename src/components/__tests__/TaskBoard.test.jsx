@@ -94,7 +94,7 @@ describe('TaskBoard', () => {
 
   it('handles task deletion', () => {
     render(<TaskBoard {...mockProps} />)
-    const deleteButton = screen.getAllByRole('button', { name: /×/i })[0]
+    const deleteButton = screen.getAllByRole('button', { name: /delete task/i })[0]
     window.confirm = jest.fn(() => true)
     fireEvent.click(deleteButton)
     expect(mockProps.onDeleteTask).toHaveBeenCalledWith('1')

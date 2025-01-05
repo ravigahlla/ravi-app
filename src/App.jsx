@@ -103,13 +103,19 @@ function App() {
     setTasks(tasks.filter(task => task.id !== taskId))
   }
 
-  const createProject = (projectName) => {
+  const handleCreateProject = (projectName) => {
+    // Check for duplicate project names
+    if (projects.some(p => p.name === projectName)) {
+      toast.error('A project with this name already exists')
+      return
+    }
+
     const newProject = {
       id: Date.now().toString(),
       name: projectName,
       taskIds: [],
       notes: '',
-      color: '#6c757d', // Default color
+      color: '#6c757d'
     }
     setProjects([...projects, newProject])
   }
@@ -268,7 +274,7 @@ function App() {
         )}
         <ProjectSidebar
           projects={projects}
-          onCreateProject={createProject}
+          onCreateProject={handleCreateProject}
           onSelectProject={setSelectedProjectId}
           selectedProjectId={selectedProjectId}
           isExpanded={isSidebarExpanded}
@@ -280,7 +286,10 @@ function App() {
             <ProfileMenu />
           </div>
           <div className="main-content">
-            <AddTaskForm onAddTask={addTask} />
+            <AddTaskForm 
+              onAddTask={addTask} 
+              data-testid="add-task-form"
+            />
             <DragDropContext onDragEnd={handleDragEnd}>
               <TaskBoard 
                 tasks={tasks}

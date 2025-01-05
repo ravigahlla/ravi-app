@@ -6,6 +6,7 @@ module.exports = {
   },
   testMatch: [
     "<rootDir>/src/components/__tests__/**/*.test.{js,jsx}",
-    "<rootDir>/src/contexts/**/*.test.{js,jsx}"
+    "<rootDir>/src/contexts/**/*.test.{js,jsx}",
+    "<rootDir>/src/__tests__/**/*.test.{js,jsx}"
   ]
 }; 

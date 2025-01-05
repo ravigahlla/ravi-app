@@ -29,4 +29,20 @@ jest.mock('@auth0/auth0-react', () => ({
 // Reset all mocks before each test
 beforeEach(() => {
   jest.clearAllMocks()
-}) 
+})
+
+// Create mock toast functions
+const mockToast = {
+  error: jest.fn(),
+  success: jest.fn()
+}
+
+// Mock the entire react-hot-toast module
+jest.mock('react-hot-toast', () => ({
+  __esModule: true,
+  default: mockToast,  // This is important - the default export should be the mock
+  toast: mockToast
+}))
+
+// Export for use in tests
+export { mockToast } 

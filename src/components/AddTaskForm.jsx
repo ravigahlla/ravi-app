@@ -7,13 +7,17 @@ function AddTaskForm({ onAddTask }) {
   const handleSubmit = (e) => {
     e.preventDefault()
     if (taskName.trim()) {
-      onAddTask(taskName)
+      onAddTask(taskName.trim())
       setTaskName('')
     }
   }
 
   return (
-    <form onSubmit={handleSubmit} className="add-task-form">
+    <form 
+      className="add-task-form" 
+      onSubmit={handleSubmit}
+      data-testid="add-task-form"
+    >
       <input
         type="text"
         value={taskName}
