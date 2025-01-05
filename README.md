@@ -136,4 +136,44 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 ## Development
 
+### Adding New Features
+
+1. **Test First**
+   - Write integration tests in `__tests__/flows/`
+   - Set up mocks in `setupTests.js`
+   - Implement the feature
+   - Verify all tests pass
+
+2. **Required Mocks**
+   - Auth0 authentication
+   - Toast notifications
+   - Local storage
+   - API calls
+   - Third-party services
+
+3. **Integration Test Structure**
+   ```javascript
+   describe('Feature Flow', () => {
+     beforeEach(() => {
+       // Set up mocks
+       // Clear storage
+     })
+
+     it('completes the feature flow successfully', async () => {
+       // Render
+       // Interact
+       // Assert
+     })
+
+     it('handles error cases appropriately', async () => {
+       // Test error scenarios
+     })
+   })
+   ```
+
+4. **Component Testing**
+   - Unit tests for individual components
+   - Mock all dependencies
+   - Test both success and error states
+
 ...
