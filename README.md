@@ -2,6 +2,23 @@
 
 A modern task management application built with React that helps users organize their work through a customizable Kanban board interface.
 
+## Technology Stack
+
+### Frontend
+- React 18 with Vite
+- @hello-pangea/dnd for drag and drop
+- react-hot-toast for notifications
+- Auth0 for authentication
+
+### Backend
+- Node.js with Express
+- MongoDB with Mongoose
+- CORS for cross-origin resource sharing
+
+### Testing
+- Jest for unit and integration testing
+- React Testing Library for component testing
+
 ## Project Goal
 
 Raviflo aims to provide a simple yet powerful task management solution that allows users to:
@@ -101,13 +118,20 @@ node server/migrate.js
 
 ## Version History
 
+### v2.0.0 - MongoDB Integration
+- Migrated to MongoDB for persistent data storage
+- Updated task and project schemas with proper relationships
+- Added server-side data validation
+- Improved error handling and API responses
+- Added migration support for existing data
+
 ### v1.0.0 - Initial Release
 - Basic task management functionality
 - Project creation and management
 - Drag and drop interface
 - Auth0 integration
 
-### v0.2.0 - Project Management Update
+### v0.2.0 - Project Management
 - Added project support
 - Implemented task-project relationships
 - Added color coding for projects
