@@ -24,30 +24,53 @@ cd raviflo-app
 npm install
 ```
 
-3. Set up MongoDB:
-   - Install MongoDB locally or use MongoDB Atlas
-   - Create a `.env` file in the root directory
-   - Add your MongoDB connection string:
-     ```
-     MONGODB_URI=your_mongodb_connection_string
-     ```
+3. Set up environment variables:
+   Create a `.env` file in the root directory with the following:
+   ```
+   # Auth0 Configuration
+   VITE_AUTH0_DOMAIN=your-auth0-domain
+   VITE_AUTH0_CLIENT_ID=your-auth0-client-id
 
-4. Run the migration script (if updating from previous version):
+   # MongoDB Configuration
+   MONGODB_URI=your_mongodb_connection_string
+
+   # Server Configuration (optional)
+   PORT=5001
+   ```
+
+4. Set up MongoDB:
+   - Install MongoDB locally or use MongoDB Atlas
+   - For local MongoDB:
+     ```bash
+     # macOS (using Homebrew)
+     brew tap mongodb/brew
+     brew install mongodb-community
+     brew services start mongodb-community
+
+     # The default connection string will be:
+     MONGODB_URI=mongodb://localhost:27017/raviflo
+     ```
+   - For MongoDB Atlas:
+     - Create a free account at https://www.mongodb.com/cloud/atlas
+     - Create a new cluster
+     - Get your connection string and add it to .env
+
+5. Start the backend server:
+```bash
+npm run server
+# You should see: "Connected to MongoDB" and "Server running on port 5001"
+```
+
+6. Start the development server (in a new terminal):
+```bash
+npm run dev
+# The app will be available at http://localhost:5173
+```
+
+7. Optional: Run the migration script (only if updating from a previous version):
 ```bash
 node server/migrate.js
 ```
-
-5. Start the development server:
-```bash
-npm run dev
-```
-
-6. Start the backend server:
-```bash
-npm run server
-```
-
-The app will be available at `http://localhost:5173`
 
 ## Features
 
