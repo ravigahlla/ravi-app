@@ -73,9 +73,9 @@ function ProjectSidebar({
       <div className="projects-list" data-testid="projects-list">
         {projects.map(project => (
           <div
-            key={project.id}
-            className={`project-item ${project.id === selectedProjectId ? 'selected' : ''}`}
-            onClick={() => onSelectProject(project.id)}
+            key={project._id}
+            className={`project-item ${project._id === selectedProjectId ? 'selected' : ''}`}
+            onClick={() => onSelectProject(project._id)}
           >
             <div 
               className="project-color-indicator"

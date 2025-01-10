@@ -1,54 +1,44 @@
 import { useState, useRef, useEffect } from 'react'
 import './TaskDetails.css'
 
-function TaskDetails({ task, projects, onClose, onUpdate, onDelete, onToggleComplete, onAddToProject }) {
+function TaskDetails({ task, projects, onClose, onUpdate, onDelete }) {
+  const [name, setName] = useState(task.name)
   const [notes, setNotes] = useState(task.notes || '')
-  const [newSubTask, setNewSubTask] = useState('')
   const [subTasks, setSubTasks] = useState(task.subTasks || [])
   const [showProjectSelector, setShowProjectSelector] = useState(false)
+  const [newSubTask, setNewSubTask] = useState('')
   const [hasChanges, setHasChanges] = useState(false)
-  const [isComplete, setIsComplete] = useState(task.isComplete || false)
   const modalRef = useRef(null)
 
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (modalRef.current && !modalRef.current.contains(event.target)) {
-        onClose()
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [onClose])
-
-  // Track changes in notes and subtasks
-  useEffect(() => {
-    const isSubTasksChanged = JSON.stringify(subTasks) !== JSON.stringify(task.subTasks || [])
-    const isNotesChanged = notes !== (task.notes || '')
-    const isCompletionChanged = isComplete !== task.isComplete
-    setHasChanges(isNotesChanged || isSubTasksChanged || isCompletionChanged)
-  }, [notes, subTasks, isComplete, task])
+    const isChanged = 
+      name !== task.name ||
+      notes !== (task.notes || '') ||
+      JSON.stringify(subTasks) !== JSON.stringify(task.subTasks || []);
+      
+    setHasChanges(isChanged);
+  }, [name, notes, subTasks, task]);
 
   const handleSave = () => {
-    const updatedTask = {
-      ...task,
-      notes,
-      subTasks: subTasks.map(st => ({
-        id: st.id,
-        text: st.text,
-        completed: st.completed
-      })),
-      isComplete
+    if (name.trim()) {
+      onUpdate({
+        _id: task._id,
+        name: name.trim(),
+        notes,
+        subTasks,
+        column: task.column,
+        isComplete: task.isComplete,
+        projectId: task.projectId
+      });
+      onClose();
     }
-    onUpdate(updatedTask)
-    onClose()
-  }
+  };
 
-  const handleToggleComplete = () => {
-    setIsComplete(!isComplete)
-    setHasChanges(true)
+  const handleDelete = () => {
+    if (window.confirm('Are you sure you want to delete this task?')) {
+      onDelete(task._id)
+      onClose()
+    }
   }
 
   const handleAddSubTask = (e) => {
@@ -67,22 +57,7 @@ function TaskDetails({ task, projects, onClose, onUpdate, onDelete, onToggleComp
     setSubTasks(subTasks.map(st => 
       st.id === subTaskId ? { ...st, completed: !st.completed } : st
     ))
-  }
-
-  const handleDelete = () => {
-    if (window.confirm('Are you sure you want to delete this task?')) {
-      onDelete(task.id)
-      onClose()
-    }
-  }
-
-  const handleAddProject = () => {
-    setShowProjectSelector(true)
-  }
-
-  const handleProjectSelect = (projectId) => {
-    onAddToProject(projectId)
-    setShowProjectSelector(false)
+    setHasChanges(true)
   }
 
   return (
@@ -100,23 +75,27 @@ function TaskDetails({ task, projects, onClose, onUpdate, onDelete, onToggleComp
               <input
                 type="checkbox"
                 className="task-checkbox"
-                checked={isComplete}
-                onChange={handleToggleComplete}
+                checked={task.isComplete}
+                onChange={() => {
+                  onUpdate({
+                    ...task,
+                    isComplete: !task.isComplete
+                  });
+                }}
               />
               <h2 
                 id="task-title"
-                className={isComplete ? 'completed' : ''}
+                className={task.isComplete ? 'completed' : ''}
               >
                 {task.name}
               </h2>
             </div>
             <div className="project-tags" data-testid="project-tags-section">
-              {task.projectIds?.map(projectId => {
-                const project = projects.find(p => p.id === projectId)
-                if (!project) return null
+              {task.projectId && projects.map(project => {
+                if (project._id !== task.projectId) return null;
                 return (
                   <span 
-                    key={project.id}
+                    key={project._id}
                     className="project-tag"
                     style={{ backgroundColor: project.color }}
                   >
@@ -125,7 +104,7 @@ function TaskDetails({ task, projects, onClose, onUpdate, onDelete, onToggleComp
                 )
               })}
               <button 
-                onClick={handleAddProject}
+                onClick={() => setShowProjectSelector(true)}
                 data-testid="add-project-button"
                 aria-label="Add project"
               >
@@ -146,8 +125,14 @@ function TaskDetails({ task, projects, onClose, onUpdate, onDelete, onToggleComp
           <div className="project-selector">
             {projects.map(project => (
               <button
-                key={project.id}
-                onClick={() => handleProjectSelect(project.id)}
+                key={project._id}
+                onClick={() => {
+                  onUpdate({
+                    ...task,
+                    projectId: project._id
+                  });
+                  setShowProjectSelector(false)
+                }}
                 className="project-option"
               >
                 {project.name}

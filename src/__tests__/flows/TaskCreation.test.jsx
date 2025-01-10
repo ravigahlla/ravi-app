@@ -2,6 +2,8 @@ import { render, screen, fireEvent, within, waitFor } from '@testing-library/rea
 import { AuthProvider } from '../../contexts/AuthContext'
 import App from '../../App'
 import { mockToast } from '../../setupTests'
+import { api } from '../../services/api'
+import mongoose from 'mongoose'
 
 describe('Task Creation Flow', () => {
   beforeEach(() => {
@@ -63,4 +65,32 @@ describe('Task Creation Flow', () => {
     const computedStyle = window.getComputedStyle(taskInput)
     expect(computedStyle.border).toBeTruthy()
   })
+
+  it('creates a new task', async () => {
+    // Mock API response for task creation
+    api.createTask.mockResolvedValueOnce({
+      _id: new mongoose.Types.ObjectId().toString(),
+      name: 'Test Task',
+      column: 'Todo',
+      isComplete: false,
+      previousColumn: 'Todo',
+      notes: '',
+      subTasks: [],
+      projectId: null,
+      userId: 'test-user-id'
+    });
+
+    render(<App />);
+    
+    // ... rest of test
+  });
+
+  it('handles task creation errors', async () => {
+    // Mock API failure
+    api.createTask.mockRejectedValueOnce(new Error('Failed to create task'));
+
+    render(<App />);
+    
+    // ... rest of test
+  });
 }) 

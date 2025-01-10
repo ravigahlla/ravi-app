@@ -1,6 +1,7 @@
 import { render, screen, fireEvent, within, waitFor } from '@testing-library/react'
 import { AuthProvider } from '../../contexts/AuthContext'
 import App from '../../App'
+import mongoose from 'mongoose'
 
 // Mock Auth0
 jest.mock('@auth0/auth0-react', () => ({
@@ -37,4 +38,15 @@ describe('Project Management Flow', () => {
 
     // Rest of test...
   })
+
+  it('creates a new project', async () => {
+    api.createProject.mockResolvedValueOnce({
+      _id: new mongoose.Types.ObjectId().toString(),
+      name: 'Test Project',
+      notes: '',
+      color: '#6c757d',
+      taskIds: [],
+      userId: 'test-user-id'
+    });
+  });
 }) 

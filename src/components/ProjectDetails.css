@@ -4,30 +4,50 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 1100;
+  z-index: 1000;
+  margin-left: var(--sidebar-width, 0);
 }
 
 .project-details {
-  background: #ffffff;
-  padding: 24px;
+  background: white;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  width: 90%;
-  max-width: 600px;
-  max-height: 80vh;
+  width: 80%;
+  max-width: 700px;
+  max-height: 90vh;
+  padding: 24px;
+  position: relative;
   overflow-y: auto;
-  color: #212529;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.sidebar-expanded .project-details-overlay {
+  --sidebar-width: 270px;
+}
+
+.sidebar-collapsed .project-details-overlay {
+  --sidebar-width: 70px;
+}
+
+@media (max-width: 768px) {
+  .project-details {
+    width: 95%;
+    padding: 16px;
+  }
+  .project-details-overlay {
+    margin-left: 0;
+  }
 }
 
 .project-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 32px;
+  margin-bottom: 24px;
+  gap: 16px;
 }
 
 .project-header button {
@@ -187,18 +207,18 @@
   gap: 12px;
   width: 100%;
   max-width: calc(100% - 24px);
+  flex: 1;
 }
 
 .project-header-left input[type="text"] {
-  font-size: 1.17em;
+  font-size: 1.5em;
   font-weight: 500;
-  padding: 8px 12px;
-  border: 1px solid #dee2e6;
-  border-radius: 4px;
+  border: none;
+  border-bottom: 2px solid transparent;
   width: 100%;
-  margin-bottom: 8px;
-  box-sizing: border-box;
-  color: #212529;
+  padding: 4px 0;
+  margin-bottom: 16px;
+  background: transparent;
 }
 
 .project-header-left input[type="text"]::placeholder {
@@ -292,4 +312,9 @@
 .cancel-link:hover {
   color: #495057;
   text-decoration: underline;
+}
+
+.project-header input[type="text"]:focus {
+  outline: none;
+  border-bottom-color: #0056b3;
 } 

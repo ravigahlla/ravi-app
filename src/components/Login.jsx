@@ -1,24 +1,24 @@
-import { useAuth } from '../contexts/AuthContext'
+import { useAuth0 } from '@auth0/auth0-react'
 import './Login.css'
 
-export default function Login() {
-  const { login, isAuthenticated } = useAuth()
+function Login() {
+  const { loginWithRedirect, isLoading } = useAuth0()
 
-  if (isAuthenticated) {
-    return null
+  if (isLoading) {
+    return <div>Loading...</div>
   }
 
   return (
     <div className="login-container">
-      <div className="login-box">
-        <h1>Welcome to Raviflo</h1>
-        <button 
-          onClick={login}
-          className="login-button"
-        >
-          Log In
-        </button>
-      </div>
+      <h1>Welcome to Raviflo</h1>
+      <button 
+        className="login-button"
+        onClick={() => loginWithRedirect()}
+      >
+        Log In
+      </button>
     </div>
   )
-} 
+}
+
+export default Login 

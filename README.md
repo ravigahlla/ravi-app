@@ -24,25 +24,30 @@ cd raviflo-app
 npm install
 ```
 
-3. Set up environment variables:
+3. Set up MongoDB:
+   - Install MongoDB locally or use MongoDB Atlas
+   - Create a `.env` file in the root directory
+   - Add your MongoDB connection string:
+     ```
+     MONGODB_URI=your_mongodb_connection_string
+     ```
+
+4. Run the migration script (if updating from previous version):
 ```bash
-# Create .env file and add your Auth0 credentials
-VITE_AUTH0_DOMAIN=your-domain
-VITE_AUTH0_CLIENT_ID=your-client-id
+node server/migrate.js
 ```
 
-4. Run the development server:
+5. Start the development server:
 ```bash
 npm run dev
 ```
 
-5. Run tests:
+6. Start the backend server:
 ```bash
-npm test                 # Run all tests
-npm run test:flows      # Run flow tests
-npm run test:components # Run component tests
-npm run test:watch     # Run tests in watch mode
+npm run server
 ```
+
+The app will be available at `http://localhost:5173`
 
 ## Features
 

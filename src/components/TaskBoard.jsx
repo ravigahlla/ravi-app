@@ -1,35 +1,35 @@
-import { Droppable } from 'react-beautiful-dnd'
-import TaskCard from './TaskCard'
+import { Droppable } from '@hello-pangea/dnd'
+import TaskList from './TaskList'
 import './TaskBoard.css'
 
-export default function TaskBoard({ tasks, projects, onTaskClick, onToggleComplete, onDeleteTask }) {
+export default function TaskBoard({ 
+  tasks = [],
+  onToggleComplete = () => {}, 
+  onTaskClick = () => {} 
+}) {
   const columns = ['Todo', 'Now', 'Next', 'Later', 'Done']
+  
+  const getTasksByColumn = (columnName) => {
+    return tasks.filter(task => task.column === columnName)
+  }
 
   return (
     <div className="task-board">
       {columns.map(column => (
-        <div key={column} className="task-column">
+        <div key={column} className="column">
           <h2>{column}</h2>
           <Droppable droppableId={column}>
-            {(provided, snapshot) => (
+            {(provided) => (
               <div
                 ref={provided.innerRef}
                 {...provided.droppableProps}
-                className={`task-list ${snapshot?.isDraggingOver ? 'drop-target' : ''}`}
+                className="task-list"
               >
-                {tasks
-                  .filter(task => task.column === column)
-                  .map((task, index) => (
-                    <TaskCard
-                      key={task.id}
-                      task={task}
-                      index={index}
-                      projects={projects}
-                      onTaskClick={onTaskClick}
-                      onToggleComplete={onToggleComplete}
-                      onDelete={onDeleteTask}
-                    />
-                  ))}
+                <TaskList
+                  tasks={getTasksByColumn(column)}
+                  onToggleComplete={onToggleComplete}
+                  onSelectTask={onTaskClick}
+                />
                 {provided.placeholder}
               </div>
             )}
