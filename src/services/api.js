@@ -2,7 +2,7 @@ const API_URL = 'http://localhost:5001/api';
 
 export const api = {
   async getTasks(userId) {
-    console.log('Fetching tasks for user:', userId);
+    console.log('🔄 Fetching tasks for user:', userId);
     const response = await fetch(`${API_URL}/tasks/${userId}`, {
       headers: {
         'Content-Type': 'application/json'
@@ -10,13 +10,16 @@ export const api = {
     });
     if (!response.ok) {
       const error = await response.text();
+      console.error('❌ API Error:', error);
       throw new Error(`Failed to fetch tasks: ${error}`);
     }
-    return response.json();
+    const data = await response.json();
+    console.log('✅ API Response:', data);
+    return data;
   },
 
   async getProjects(userId) {
-    console.log('Fetching projects for user:', userId);
+    console.log('🔄 Fetching projects for user:', userId);
     const response = await fetch(`${API_URL}/projects/${userId}`, {
       headers: {
         'Content-Type': 'application/json'
@@ -24,9 +27,12 @@ export const api = {
     });
     if (!response.ok) {
       const error = await response.text();
+      console.error('❌ API Error:', error);
       throw new Error(`Failed to fetch projects: ${error}`);
     }
-    return response.json();
+    const data = await response.json();
+    console.log('✅ API Response:', data);
+    return data;
   },
 
   async createProject(projectData) {

@@ -1,7 +1,7 @@
-const express = require('express');
-const mongoose = require('mongoose');
-const cors = require('cors');
-const dotenv = require('dotenv');
+import express from 'express';
+import mongoose from 'mongoose';
+import cors from 'cors';
+import dotenv from 'dotenv';
 
 dotenv.config();
 
@@ -28,6 +28,7 @@ mongoose.connect(process.env.MONGODB_URI)
     console.log('Connected to MongoDB');
     console.log('Database:', mongoose.connection.name);
     console.log('Host:', mongoose.connection.host);
+    console.log('Connection string:', process.env.MONGODB_URI);
     console.log('Port:', mongoose.connection.port);
   })
   .catch(err => console.error('MongoDB connection error:', err));
@@ -66,13 +67,15 @@ app.get('/api/schema', (req, res) => {
 // Project routes
 app.get('/api/projects/:userId', async (req, res) => {
   try {
-    console.log('Fetching projects for user:', req.params.userId);
+    console.log('📝 GET /projects - userId:', req.params.userId);
+    console.log('🔍 Looking for projects with query:', { userId: req.params.userId });
     const projects = await Project.find({ userId: req.params.userId });
-    console.log('Found projects:', projects);
+    console.log('🔍 MongoDB Query Result:', projects);
+    console.log('📤 Sending projects:', projects);
     res.json(projects);
   } catch (error) {
-    console.error('Error fetching projects:', error);
-    res.status(500).json({ message: error.message });
+    console.error('❌ Error fetching projects:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -144,7 +147,7 @@ app.delete('/api/projects/:id', async (req, res) => {
 app.get('/api/tasks/all', async (req, res) => {
   try {
     const tasks = await Task.find({});
-    console.log('All tasks:', tasks);
+    console.log('All tasks in database:', tasks);
     res.json(tasks);
   } catch (error) {
     console.error('Error fetching all tasks:', error);
@@ -155,21 +158,15 @@ app.get('/api/tasks/all', async (req, res) => {
 // Get tasks by userId
 app.get('/api/tasks/:userId', async (req, res) => {
   try {
-    console.log('Fetching tasks for user:', req.params.userId);
-    const tasks = await Task.find({
-      $or: [
-        { userId: req.params.userId },
-        { userId: { $exists: false } }
-      ]
-    });
-    console.log('Found tasks:', tasks);
-    if (!tasks) {
-      return res.status(404).json({ message: 'No tasks found' });
-    }
+    console.log('📝 GET /tasks - userId:', req.params.userId);
+    console.log('🔍 Looking for tasks with query:', { userId: req.params.userId });
+    const tasks = await Task.find({ userId: req.params.userId });
+    console.log('🔍 MongoDB Query Result:', tasks);
+    console.log('📤 Sending tasks:', tasks);
     res.json(tasks);
   } catch (error) {
-    console.error('Error fetching tasks:', error);
-    res.status(500).json({ message: error.message });
+    console.error('❌ Error fetching tasks:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -263,6 +260,18 @@ app.patch('/api/tasks/:id', async (req, res) => {
   } catch (error) {
     console.error('Error updating task:', error);
     res.status(400).json({ message: error.message });
+  }
+});
+
+// Debug route to get all projects
+app.get('/api/projects/all', async (req, res) => {
+  try {
+    const projects = await Project.find({});
+    console.log('All projects in database:', projects);
+    res.json(projects);
+  } catch (error) {
+    console.error('Error fetching all projects:', error);
+    res.status(500).json({ message: error.message });
   }
 });
 

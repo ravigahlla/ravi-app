@@ -7,6 +7,14 @@ dist-ssr
 .env
 .env.local
 .env.*.local
+.env.development
+.env.staging
+.env.production
+
+# Database
+*.mongodb
+.mongodb
+mongosh.log
 
 # Logs
 logs
@@ -26,3 +34,13 @@ pnpm-debug.log*
 *.njsproj
 *.sln
 *.sw?
+
+# Testing
+coverage
+.nyc_output
+jest-coverage
+
+# Build artifacts
+build
+.cache
+.temp

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const projectSchema = new mongoose.Schema({
   userId: {
@@ -12,7 +12,7 @@ const projectSchema = new mongoose.Schema({
     trim: true
   },
   taskIds: [{
-    type: String,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Task'
   }],
   notes: String,
@@ -23,4 +23,5 @@ const projectSchema = new mongoose.Schema({
   }
 });
 
-module.exports = { Project: mongoose.model('Project', projectSchema) }; 
+const Project = mongoose.model('Project', projectSchema);
+export default Project; 

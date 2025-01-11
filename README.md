@@ -2,6 +2,11 @@
 
 A modern task management application built with React that helps users organize their work through a customizable Kanban board interface.
 
+## Version
+- v0.2.0 - Added MongoDB integration and Auth0 authentication
+- Requires Node.js >= 18
+- Requires MongoDB >= 6.0
+
 ## Technology Stack
 
 ### Frontend
@@ -14,19 +19,23 @@ A modern task management application built with React that helps users organize 
 - Node.js with Express
 - MongoDB with Mongoose
 - CORS for cross-origin resource sharing
+- ESM modules throughout
 
-### Testing
-- Jest for unit and integration testing
-- React Testing Library for component testing
+## Architecture
 
-## Project Goal
-
-Raviflo aims to provide a simple yet powerful task management solution that allows users to:
-- Organize tasks across different stages (Todo, Now, Next, Later, Done)
-- Group tasks into projects
-- Track task completion
-- Manage task details and subtasks
-- Drag and drop tasks between columns
+```
+Frontend (localhost:5173)           Backend (localhost:5001)
+┌─────────────────┐                ┌─────────────────┐
+│     React       │                │    Express      │
+│   Components    │ ←── REST ────→ │     Server      │
+└─────────────────┘                └─────────────────┘
+         ↑                                   ↑
+         │                                   │
+         │                          ┌─────────────────┐
+         │                          │    MongoDB      │
+         └──── Auth0 ────→          │   (27017)      │
+                                    └─────────────────┘
+```
 
 ## Setup Instructions
 
@@ -42,52 +51,87 @@ npm install
 ```
 
 3. Set up environment variables:
-   Create a `.env` file in the root directory with the following:
-   ```
-   # Auth0 Configuration
-   VITE_AUTH0_DOMAIN=your-auth0-domain
-   VITE_AUTH0_CLIENT_ID=your-auth0-client-id
+```bash
+# Copy example env files
+cp .env.example .env
+cp .env.example .env.development
 
-   # MongoDB Configuration
-   MONGODB_URI=your_mongodb_connection_string
-
-   # Server Configuration (optional)
-   PORT=5001
-   ```
+# Update both files with your values:
+# - VITE_AUTH0_DOMAIN (from Auth0 dashboard)
+# - VITE_AUTH0_CLIENT_ID (from Auth0 dashboard)
+# - MONGODB_URI (default: mongodb://localhost:27017/raviflo_dev)
+```
 
 4. Set up MongoDB:
-   - Install MongoDB locally or use MongoDB Atlas
-   - For local MongoDB:
-     ```bash
-     # macOS (using Homebrew)
-     brew tap mongodb/brew
-     brew install mongodb-community
-     brew services start mongodb-community
-
-     # The default connection string will be:
-     MONGODB_URI=mongodb://localhost:27017/raviflo
-     ```
-   - For MongoDB Atlas:
-     - Create a free account at https://www.mongodb.com/cloud/atlas
-     - Create a new cluster
-     - Get your connection string and add it to .env
-
-5. Start the backend server:
 ```bash
+# Install MongoDB (macOS)
+brew tap mongodb/brew
+brew install mongodb-community
+
+# Start MongoDB
+brew services start mongodb-community
+```
+
+5. Initialize the database:
+```bash
+# Reset database and add development seed data
+npm run db:reset
+npm run db:seed
+```
+
+6. Start the servers:
+```bash
+# Terminal 1 - Start backend
 npm run server
-# You should see: "Connected to MongoDB" and "Server running on port 5001"
-```
 
-6. Start the development server (in a new terminal):
-```bash
+# Terminal 2 - Start frontend
 npm run dev
-# The app will be available at http://localhost:5173
 ```
 
-7. Optional: Run the migration script (only if updating from a previous version):
-```bash
-node server/migrate.js
+Visit http://localhost:5173 and log in with Auth0
+
+## Development Scripts
+
+- `npm run dev` - Start frontend development server
+- `npm run server` - Start backend server
+- `npm run db:seed` - Seed database with development data
+- `npm run db:reset` - Clear database
+- `npm run dev:fresh` - Reset DB, seed, and start development
+
+## Database Structure
+
+### Tasks Collection
+```javascript
+{
+  name: String,          // required
+  column: String,        // Todo, Now, Next, Later, Done
+  projectId: ObjectId,   // reference to Projects
+  userId: String,        // Auth0 user ID
+  isComplete: Boolean,
+  notes: String,
+  subTasks: [String]
+}
 ```
+
+### Projects Collection
+```javascript
+{
+  name: String,          // required
+  userId: String,        // Auth0 user ID
+  notes: String,
+  color: String,
+  taskIds: [ObjectId]    // reference to Tasks
+}
+```
+
+## Project Goal
+
+Raviflo aims to provide a simple yet powerful task management solution that allows users to:
+- Organize tasks across different stages (Todo, Now, Next, Later, Done)
+- Group tasks into projects
+- Track task completion
+- Manage task details and subtasks
+- Drag and drop tasks between columns
 
 ## Features
 
@@ -187,6 +231,34 @@ This project is licensed under the MIT License - see the LICENSE file for detail
   - Fixed mock implementation to properly handle both default and named exports
 
 ## Development
+
+### Development Environment Setup
+
+The application supports different environments with corresponding data setups:
+
+1. **Environment Configuration**
+   ```bash
+   # Copy the appropriate .env file
+   cp .env.development .env
+   ```
+
+2. **Database Setup**
+   ```bash
+   # Reset the database (removes all data)
+   npm run db:reset
+
+   # Seed with development data
+   npm run db:seed
+
+   # Or do both and start the app
+   npm run dev:fresh
+   ```
+
+3. **Test Data**
+   - Development environment includes sample tasks and projects
+   - Seed data is only loaded in development
+   - Data can be reset anytime with `npm run dev:fresh`
+   - Modify seed data in `server/seeds/` directory
 
 ### Adding New Features
 

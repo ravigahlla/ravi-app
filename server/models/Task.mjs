@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const taskSchema = new mongoose.Schema({
   userId: {
@@ -23,14 +23,11 @@ const taskSchema = new mongoose.Schema({
   previousColumn: String,
   notes: String,
   subTasks: [String],
-  projectIds: [{
-    type: String,
+  projectId: {
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'Project'
-  }],
-  createdAt: {
-    type: Date,
-    default: Date.now
   }
 });
 
-module.exports = { Task: mongoose.model('Task', taskSchema) }; 
+const Task = mongoose.model('Task', taskSchema);
+export default Task; 

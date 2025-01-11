@@ -21,6 +21,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (auth0.user) {
+      console.log('Auth0 User ID:', auth0.user.sub);
       loadUserData(auth0.user.sub)
     } else {
       setIsLoading(false)
@@ -29,17 +30,19 @@ export function AuthProvider({ children }) {
 
   const loadUserData = async (userId) => {
     try {
-      console.log('Loading data for user:', userId);
+      console.log('🔍 Loading data for user:', userId);
       const [fetchedTasks, fetchedProjects] = await Promise.all([
         api.getTasks(userId),
         api.getProjects(userId)
       ]);
-      console.log('Fetched tasks:', fetchedTasks);
-      console.log('Fetched projects:', fetchedProjects);
+      console.log('📥 Fetched tasks:', fetchedTasks);
+      console.log('📥 Fetched projects:', fetchedProjects);
+      console.log('🔑 Using Auth0 ID:', auth0.user.sub);
       setTasks(fetchedTasks);
       setProjects(fetchedProjects);
     } catch (error) {
-      console.error('Failed to load user data:', error);
+      console.error('❌ Failed to load user data:', error.message);
+      console.error('Full error:', error);
       toast.error('Failed to load your data. Please try again.');
     } finally {
       setIsLoading(false);
