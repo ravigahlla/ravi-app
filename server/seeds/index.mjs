@@ -2,13 +2,26 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import Task from '../models/Task.mjs';
 import Project from '../models/Project.mjs';
+import { fileURLToPath } from 'url';
+import { dirname, join } from 'path';
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// Load environment variables from root .env file
 dotenv.config({
-  path: process.env.NODE_ENV ? `.env.${process.env.NODE_ENV}` : '.env'
+  path: join(__dirname, '../../.env')
 });
 
-// Use a development test account ID or get from environment variable
-const AUTH0_USER_ID = process.env.SEED_USER_ID || 'development-test-user';
+// Get user ID from environment variable
+const AUTH0_USER_ID = process.env.SEED_AUTH0_USER_ID;
+console.log('🔑 Checking Auth0 User ID configuration...');
+
+if (!AUTH0_USER_ID) {
+  console.error('❌ SEED_AUTH0_USER_ID environment variable is required');
+  console.error('Please set SEED_AUTH0_USER_ID in your .env file');
+  process.exit(1);
+}
 
 async function getSeedData() {
   const env = process.env.NODE_ENV || 'development';

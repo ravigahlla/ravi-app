@@ -52,14 +52,17 @@ npm install
 
 3. Set up environment variables:
 ```bash
-# Copy example env files
-cp .env.example .env
-cp .env.example .env.development
+# Copy and configure environment files
+cp .env.example .env                    # Main configuration
+cp .env.development.example .env.development  # Development settings
 
-# Update both files with your values:
+# Update .env with your values:
 # - VITE_AUTH0_DOMAIN (from Auth0 dashboard)
 # - VITE_AUTH0_CLIENT_ID (from Auth0 dashboard)
-# - MONGODB_URI (default: mongodb://localhost:27017/raviflo_dev)
+# - AUTH0_AUDIENCE (your API identifier)
+
+# Update .env.development with:
+# - SEED_AUTH0_USER_ID (your Auth0 user ID for development)
 ```
 
 4. Set up MongoDB:

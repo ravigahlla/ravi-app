@@ -10,6 +10,11 @@ dist-ssr
 .env.development
 .env.staging
 .env.production
+.env.*.local
+
+# But keep example files
+!.env.example
+!.env.*.example
 
 # Database
 *.mongodb

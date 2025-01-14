@@ -1,11 +1,16 @@
+import { useAuth0 } from '@auth0/auth0-react';
+
 const API_URL = 'http://localhost:5001/api';
 
 export const api = {
   async getTasks(userId) {
     console.log('🔄 Fetching tasks for user:', userId);
+    const { getAccessTokenSilently } = useAuth0();
+    const token = await getAccessTokenSilently();
     const response = await fetch(`${API_URL}/tasks/${userId}`, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
     });
     if (!response.ok) {
@@ -20,9 +25,12 @@ export const api = {
 
   async getProjects(userId) {
     console.log('🔄 Fetching projects for user:', userId);
+    const { getAccessTokenSilently } = useAuth0();
+    const token = await getAccessTokenSilently();
     const response = await fetch(`${API_URL}/projects/${userId}`, {
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
       }
     });
     if (!response.ok) {

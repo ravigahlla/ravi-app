@@ -10,13 +10,18 @@ async function resetDatabase() {
     console.log('Connecting to MongoDB...');
     await mongoose.connect(process.env.MONGODB_URI);
 
-    console.log('Clearing all collections...');
-    await Task.deleteMany({});
-    await Project.deleteMany({});
+    console.log('Current collections:', await mongoose.connection.db.collections());
+    console.log('Dropping all collections...');
 
-    console.log('Database reset completed successfully!');
+    const collections = await mongoose.connection.db.collections();
+    for (let collection of collections) {
+      console.log('Dropping collection:', collection.collectionName);
+      await collection.drop();
+    }
+
+    console.log('Database reset complete!');
   } catch (error) {
-    console.error('Database reset failed:', error);
+    console.error('Failed to reset database:', error);
   } finally {
     await mongoose.disconnect();
   }

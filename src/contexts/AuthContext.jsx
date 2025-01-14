@@ -1,12 +1,13 @@
 import { createContext, useContext, useState, useEffect } from 'react'
 import { useAuth0 } from '@auth0/auth0-react'
-import { api } from '../services/api.js'
+import { useApi } from '../hooks/useApi'
 import { toast } from 'react-hot-toast'
 
 const AuthContext = createContext()
 
 export function AuthProvider({ children }) {
   const auth0 = useAuth0()
+  const api = useApi()
   const [isLoading, setIsLoading] = useState(true)
   const [tasks, setTasks] = useState([])
   const [projects, setProjects] = useState([])

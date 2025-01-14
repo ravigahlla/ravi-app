@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import { checkJwt } from './middleware/auth.mjs';
 
 dotenv.config();
 
@@ -65,9 +66,10 @@ app.get('/api/schema', (req, res) => {
 });
 
 // Project routes
-app.get('/api/projects/:userId', async (req, res) => {
+app.get('/api/projects/:userId', checkJwt, async (req, res) => {
   try {
     console.log('📝 GET /projects - userId:', req.params.userId);
+    console.log('🔑 Request headers:', req.headers);
     console.log('🔍 Looking for projects with query:', { userId: req.params.userId });
     const projects = await Project.find({ userId: req.params.userId });
     console.log('🔍 MongoDB Query Result:', projects);
@@ -156,9 +158,10 @@ app.get('/api/tasks/all', async (req, res) => {
 });
 
 // Get tasks by userId
-app.get('/api/tasks/:userId', async (req, res) => {
+app.get('/api/tasks/:userId', checkJwt, async (req, res) => {
   try {
     console.log('📝 GET /tasks - userId:', req.params.userId);
+    console.log('🔑 Request headers:', req.headers);
     console.log('🔍 Looking for tasks with query:', { userId: req.params.userId });
     const tasks = await Task.find({ userId: req.params.userId });
     console.log('🔍 MongoDB Query Result:', tasks);
@@ -272,6 +275,20 @@ app.get('/api/projects/all', async (req, res) => {
   } catch (error) {
     console.error('Error fetching all projects:', error);
     res.status(500).json({ message: error.message });
+  }
+});
+
+// Debug routes - remove in production
+app.get('/api/debug/all', async (req, res) => {
+  try {
+    const tasks = await Task.find({});
+    const projects = await Project.find({});
+    console.log('🔍 All Tasks:', tasks);
+    console.log('🔍 All Projects:', projects);
+    res.json({ tasks, projects });
+  } catch (error) {
+    console.error('Debug route error:', error);
+    res.status(500).json({ error: error.message });
   }
 });
 
